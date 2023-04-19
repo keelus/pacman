@@ -1,0 +1,32 @@
+{
+  "frame_0":{
+    "dimensiones":[
+      13,
+      13
+    ],
+    "coordenadas":[
+      0,
+      0
+    ]
+  },
+  "frame_1":{
+    "dimensiones":[
+      13,
+      13
+    ],
+    "coordenadas":[
+      13,
+      0
+    ]
+  },
+  "frame_2":{
+    "dimensiones":[
+      13,
+      13
+    ],
+    "coordenadas":[
+      26,
+      0
+    ]
+  }
+}
