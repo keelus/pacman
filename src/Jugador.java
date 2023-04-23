@@ -4,6 +4,7 @@ import javafx.scene.media.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class Jugador extends Entidad {
     boolean intentandoNuevaDireccion;
@@ -12,9 +13,15 @@ public class Jugador extends Entidad {
 
     long siguienteWaka;
 
+    boolean conVida = true;
+    boolean animacionMuerteEmpezada = false;
+    double animacionMuerteInicio = -1;
+    boolean animacionMuerteFinalizada = false;
 
 
-    long intervalo = 150; // ms * 1M = ns
+
+
+
     long intervalo2 = 100; // ms * 1M = ns
 
     public boolean isIntentandoNuevaDireccion() {
@@ -41,13 +48,19 @@ public class Jugador extends Entidad {
     public void setSiguienteWaka(long siguienteWaka) {
         this.siguienteWaka = siguienteWaka;
     }
+    public boolean isConVida() {
+        return conVida;
+    }
+    public void setConVida(boolean conVida) {
+        this.conVida = conVida;
+    }
 
     private AudioClip sonido;
 
 
 
-    public Jugador(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, String colorDebug, long siguienteWaka, int puntuacion) {
-        super(posicion, direccion, hojaSprites, siguienteFrame, frameActual, siguienteMovimiento, colorDebug);
+    public Jugador(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, long siguienteWaka, int puntuacion) {
+        super(posicion, direccion, hojaSprites, siguienteFrame, frameActual, siguienteMovimiento, Color.WHITE);
         this.intentandoNuevaDireccion = false;
         this.intentandoNuevaDireccionDir = null;
         this.intentandoNuevaDireccionRestantes = -1;
@@ -65,18 +78,39 @@ public class Jugador extends Entidad {
 
         //System.out.println(getHojaSprites());
         double dim_fantasma = getHojaSprites().getSpriteData().get("frame_" + getFrameActual()).getWidth();
-        double posX_fantasma = this.getPosicion().getX() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2* Constantes.ESCALADO_SPRITE)  - 2 * 8 * Constantes.ESCALADO_SPRITE;
-        double posY_fantasma = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2* Constantes.ESCALADO_SPRITE) ;
+        double posX_fantasma = this.getPosicion().getX() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(15 / 2* Constantes.ESCALADO_SPRITE)  - 2 * 8 * Constantes.ESCALADO_SPRITE;
+        double posY_fantasma = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(16 / 2* Constantes.ESCALADO_SPRITE) ;
 
 
+        String sprite = "";
+        sprite = "frame_" + getFrameActual();
+
+        //frames van de 3 a 13
+        //frames van de 0 a 10
+        if (!this.conVida && Controlador.perdido){
+            if (!this.animacionMuerteEmpezada) {
+                this.animacionMuerteEmpezada = true;
+                this.animacionMuerteInicio = Controlador.ahora() + 333;
+                setFrameActual(3);
+            } else if (!this.animacionMuerteFinalizada){
+                if (Controlador.ahora() + 100 > this.animacionMuerteInicio + 100 * (getFrameActual() - 3))
+                    this.setFrameActual(this.getFrameActual() + 1);
+
+                if (getFrameActual() == 14)
+                    animacionMuerteFinalizada = true;
+            }
+        }
 
 
         // Sprite original del jugador, mirando hacia la derecha
-        ImageView spriteJugador = new ImageView(getHojaSprites().getSpriteData().get("frame_" + getFrameActual()));
+        ImageView spriteJugador = new ImageView(getHojaSprites().getSpriteData().get(sprite));
 
 
 
         // Giramos la imagen si el jugador apunta hacia un lado que no sea la derecha
+
+
+        if (this.conVida)
         if (getDireccion() == "izq")
             spriteJugador.setRotate(180);
         else if (getDireccion() == "arr")
@@ -112,7 +146,7 @@ public class Jugador extends Entidad {
             }
 
             if (Controlador.ahora() > getSiguienteMovimiento()){
-                setSiguienteMovimiento(Controlador.ahora() + intervalo);
+                setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_JUGADOR);
 
                 String direccion = intentandoNuevaDireccionDir;
                 if (intentandoNuevaDireccion && intentarNuevaDireccion(direccion))
@@ -216,6 +250,20 @@ public class Jugador extends Entidad {
         }
 
         return false; // Devolvemos que no se ha conseguido cambiar por ahora
+    }
+
+    @Override
+    void reiniciar(double miliSegundosExtra){
+        setPosicion(new Posicion(16, 26));
+        setDireccion("der");
+        setFrameActual(0);
+        this.intentandoNuevaDireccion = false;
+        this.intentandoNuevaDireccionDir = null;
+        this.intentandoNuevaDireccionRestantes = -1;
+        this.animacionMuerteEmpezada = false;
+        animacionMuerteFinalizada = false;
+        this.setSiguienteMovimiento(Controlador.ahora());
+        this.setSiguienteFrame(Controlador.ahora());
     }
 
 

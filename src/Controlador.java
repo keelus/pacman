@@ -9,6 +9,10 @@ import java.util.*;
 public class Controlador {
     private static Controlador singletonControlador = null;
 
+    public static void setSingletonControlador(Controlador singletonControlador) {
+        Controlador.singletonControlador = singletonControlador;
+    }
+
     static ArrayList<ArrayList<String>> estructuraVisualMapa;
     static ArrayList<ArrayList<String>> estructuraFuncionalMapa;
 
@@ -17,13 +21,26 @@ public class Controlador {
 
     public static int nivelActual;
     public static int puntuacion;
+    public static int vidasJugador;
 
     public static boolean partidaEmpezada = true;
 
-    public static EstadosFantasma estadoGlobal = null; // Solo se utilizara para conocer si estan en modo huida o no
+    public static Boolean huidaFantasmas = false;
     public static long finHuidaFantasmas;
 
     public static ControladorSonido controladorSonido;
+
+    public static HashMap<String, Fantasma> listaFantasmas = new HashMap<>();
+    public static Jugador jugador;
+    public static double momentoPerder = -1;
+    public static Boolean perdido = false;
+    public static Boolean restadoPerdido = false;
+
+    public static Boolean juegoEnCurso = false;
+    public static double juegoMomentoInicio = ahora() + Constantes.COOLDOWN_INICIO_GAME;
+
+    public static int ventanaActual = 0;
+
 
 
     private Controlador() throws IOException, ParseException {
@@ -37,10 +54,100 @@ public class Controlador {
         puntuacion = 0;
         finHuidaFantasmas = ahora();
         controladorSonido = new ControladorSonido();
-    }
 
+        jugador = new Jugador(new Posicion(16, 26), "der", new HojaSprites("src/media/imagen/jugador3.png", "src/datos/indicesSprites/spritesJugador.json"), 0, 0, 0, 0, 0);
+        Rojo rojo       = new Rojo(new Posicion(16, 14), "izq", new HojaSprites("src/media/imagen/fantasma.png", "src/datos/indicesSprites/spritesFantasmas.json"), 0, 0, 0,  new Posicion(10, 0), EstadosFantasma.ATAQUE, new Posicion(27, -1), new Posicion(14, 17));
+        Rosa rosa       = new Rosa(new Posicion(15, 17), "abj", new HojaSprites("src/media/imagen/fantasma.png", "src/datos/indicesSprites/spritesFantasmas.json"), 0, 0, 0, new Posicion(29, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(4, -1), new Posicion(14, 17));
+        Azul azul       = new Azul(new Posicion(14, 17), "arr", new HojaSprites("src/media/imagen/fantasma.png", "src/datos/indicesSprites/spritesFantasmas.json"), 0, 0, 0, new Posicion(10, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(29, 34), new Posicion(14, 17));
+        Naranja naranja = new Naranja(new Posicion(17, 17), "arr", new HojaSprites("src/media/imagen/fantasma.png", "src/datos/indicesSprites/spritesFantasmas.json"), 0, 0, 0, new Posicion(29, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(2, 34), new Posicion(14, 17));
+        listaFantasmas.put("rojo", rojo);
+        listaFantasmas.put("rosa", rosa);
+        listaFantasmas.put("azul", azul);
+        listaFantasmas.put("naranja", naranja);
+
+        vidasJugador = 3;
+
+    }
+    public static void tocarSonidosMuerteFantasma(){
+        boolean algunFantasmaMuerto = false;
+        for(String fantasma: listaFantasmas.keySet()) {
+            if (listaFantasmas.get(fantasma).getEstado() == EstadosFantasma.MUERTO){
+                algunFantasmaMuerto = true;
+                break;
+            }
+        }
+        if (algunFantasmaMuerto) {
+            if (!controladorSonido.getVueltaSpawnFantasma().isPlaying())
+                controladorSonido.getVueltaSpawnFantasma().play();
+        } else if (controladorSonido.getVueltaSpawnFantasma().isPlaying())
+            controladorSonido.getVueltaSpawnFantasma().stop();
+    }
+    public static void dibujarFantasmas(GraphicsContext gc){
+        if (perdido) return;
+        for(String fantasma: listaFantasmas.keySet()){
+            listaFantasmas.get(fantasma).dibujar(gc);
+        }
+    }
+    public static void reiniciarPosiciones(double miliSegundosExtra){
+        jugador.reiniciar(miliSegundosExtra);
+        for(String fantasma: listaFantasmas.keySet())
+            listaFantasmas.get(fantasma).reiniciar(miliSegundosExtra);
+    }
+    public static void moverFantasmas(){
+        for(String fantasma: listaFantasmas.keySet()){
+            listaFantasmas.get(fantasma).mover();
+
+            listaFantasmas.get(fantasma).detectarColisionJugador(jugador);
+
+
+            if (listaFantasmas.get(fantasma).estado == EstadosFantasma.ESPERASPAWNINICIAL)
+                if (ahora() > listaFantasmas.get(fantasma).momentoSpawnInicial)
+                    listaFantasmas.get(fantasma).cambiarEstado(EstadosFantasma.ESPERASPAWN);
+        }
+
+
+
+        if (huidaFantasmas && ahora() > finHuidaFantasmas){ // Modo HUIDA finalizado
+            huidaFantasmas = false;
+            controladorSonido.getHuidaFantasmas().stop();
+            for(String fantasma: listaFantasmas.keySet()){
+                if (listaFantasmas.get(fantasma).getEstado() == EstadosFantasma.HUIDA){
+                    if (listaFantasmas.get(fantasma).getEstadoAnterior() == EstadosFantasma.ESPERASPAWN)
+                        listaFantasmas.get(fantasma).setEstado(EstadosFantasma.ESPERASPAWN);
+                    listaFantasmas.get(fantasma).setEstado(EstadosFantasma.ATAQUE);
+                }
+            }
+
+        }
+
+    }
+    public static void actualizarEstadosFantasmas(EstadosFantasma nuevoEstado){
+        listaFantasmas.get("rojo").cambiarEstado((nuevoEstado));
+        listaFantasmas.get("rosa").cambiarEstado((nuevoEstado));
+        listaFantasmas.get("azul").cambiarEstado((nuevoEstado));
+        listaFantasmas.get("naranja").cambiarEstado((nuevoEstado));
+    }
+    public static void establecerObjetivosFantasmas(){
+        for(String fantasma: listaFantasmas.keySet()){
+            if(listaFantasmas.get("rojo").estado == EstadosFantasma.ATAQUE)
+                ((Rojo)listaFantasmas.get("rojo")).establecerObjetivoAtaque(jugador, null);
+            if(listaFantasmas.get("rosa").estado == EstadosFantasma.ATAQUE)
+                ((Rosa)listaFantasmas.get("rosa")).establecerObjetivoAtaque(jugador, null);
+            if(listaFantasmas.get("azul").estado == EstadosFantasma.ATAQUE)
+                ((Azul)listaFantasmas.get("azul")).establecerObjetivoAtaque(jugador, (Rojo)listaFantasmas.get("rojo")); // El fantasma azul es el unico que depende del antasma rojo para su propio movimiento
+            if(listaFantasmas.get("naranja").estado == EstadosFantasma.ATAQUE)
+                ((Naranja)listaFantasmas.get("naranja")).establecerObjetivoAtaque(jugador, null);
+        }
+    }
     public static void forzarHuidaFantasmas(){
-        estadoGlobal = EstadosFantasma.HUIDA;
+        huidaFantasmas = true;
+
+        for(String fantasma: listaFantasmas.keySet()){
+            EstadosFantasma estado = listaFantasmas.get(fantasma).getEstado();
+            if (estado != EstadosFantasma.MUERTO && estado != EstadosFantasma.ESPERASPAWN && estado != EstadosFantasma.ESPERASPAWNINICIAL)
+                listaFantasmas.get(fantasma).cambiarEstado(EstadosFantasma.HUIDA);
+        }
+
         finHuidaFantasmas = ahora() + 10 * 1000;
 
         if(controladorSonido.getHuidaFantasmas().isPlaying()){
@@ -119,12 +226,12 @@ public class Controlador {
             for (int i = 1; i < nivelActual + 1; i++) {
                 sprites.set(sprites.size() - i, "nivel_" + i);
             }
-        } else if (nivelActual > 7 && nivelActual <= 18){ // Caso B, 7 elementos, puede que haya repetidos
+        } else if (nivelActual <= 18){ // Caso B, 7 elementos, puede que haya repetidos
             for(int i = nivelActual - 6; i < nivelActual + 1; i++) {
                 sprites.set(6 - (nivelActual - i), "nivel_" + i);
             }
             Collections.reverse(sprites);
-        } else if (nivelActual > 18) { // Caso C, los 7 elementos son llaves
+        } else { // Caso C, los 7 elementos son llaves
             for (int i = 0; i < sprites.size(); i++)
                 sprites.set(i, "nivel_" + 20);
         }
@@ -135,6 +242,23 @@ public class Controlador {
                 gc.drawImage(imagen, (posX + (i * 2)) * 8 * Constantes.ESCALADO_SPRITE - 2 * 8 * Constantes.ESCALADO_SPRITE, posY * 8 * Constantes.ESCALADO_SPRITE, imagen.getWidth(), imagen.getHeight());
             }
         }
+    }
+
+    public static void dibujarVidas(GraphicsContext gc){
+        int posX = 4;
+        int posY = 34;
+
+        for (int i=0; i < vidasJugador; i++){
+            Image imagen = jugador.getHojaSprites().getSpriteData().get("frame_1");
+            gc.drawImage(imagen, (posX + (i * 2)) * 8 * Constantes.ESCALADO_SPRITE - 2 * 8 * Constantes.ESCALADO_SPRITE, posY * 8 * Constantes.ESCALADO_SPRITE, imagen.getWidth(), imagen.getHeight());
+        }
+    }
+
+    public static void iniciarJuego(){
+        juegoMomentoInicio = ahora() + Constantes.COOLDOWN_INICIO_GAME;
+        reiniciarPosiciones(Constantes.COOLDOWN_INICIO_GAME);
+
+
     }
 
 

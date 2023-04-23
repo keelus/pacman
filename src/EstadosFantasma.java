@@ -3,5 +3,6 @@ public enum EstadosFantasma {
     DISPERSION,
     HUIDA,
     MUERTO,
-    ESPERASPAWN
+    ESPERASPAWN,
+    ESPERASPAWNINICIAL
 }

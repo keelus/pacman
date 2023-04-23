@@ -1,5 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public abstract class Entidad {
     private long siguienteFrame;
     private int frameActual;
     private long siguienteMovimiento;
-    private String colorDebug;
+    private Color colorDebug;
 
     abstract void dibujar(GraphicsContext gc);
     abstract void mover();
@@ -78,17 +79,17 @@ public abstract class Entidad {
     public void setSiguienteMovimiento(long siguienteMovimiento) {
         this.siguienteMovimiento = siguienteMovimiento;
     }
-    public String getColorDebug() {
+    public Color getColorDebug() {
         return colorDebug;
     }
-    public void setColorDebug(String colorDebug) {
+    public void setColorDebug(Color colorDebug) {
         this.colorDebug = colorDebug;
     }
 
     public Entidad() {
     }
 
-    public Entidad(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, String colorDebug) {
+    public Entidad(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, Color colorDebug) {
         this.posicion = posicion;
         this.direccion = direccion;
         this.hojaSprites = hojaSprites;
@@ -97,4 +98,6 @@ public abstract class Entidad {
         this.siguienteMovimiento = siguienteMovimiento;
         this.colorDebug = colorDebug;
     }
+
+    abstract void reiniciar(double miliSegundosExtra);
 }

@@ -5,7 +5,6 @@ import javafx.scene.image.WritableImage;
 public class Utilidades {
 
     public static WritableImage aplicarTransparencia(WritableImage imagen) {
-
         PixelReader pixelReader = imagen.getPixelReader();
         WritableImage imagenTransparente = new WritableImage(pixelReader, (int) imagen.getWidth(), (int) imagen.getHeight());
         PixelWriter pixelWriter = imagenTransparente.getPixelWriter();
