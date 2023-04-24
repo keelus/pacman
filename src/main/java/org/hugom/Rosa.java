@@ -12,7 +12,7 @@ public class Rosa extends Fantasma{
         if(getEstado() != EstadosFantasma.ATAQUE)
             return;
 
-        Posicion posJugador = new Posicion(jugador.getPosicion().getX(), jugador.getPosicion().getY());
+     Posicion posJugador = new Posicion(jugador.getPosicion().getX(), jugador.getPosicion().getY());
         String dirJugador = jugador.getDireccion();
 
         switch(dirJugador){

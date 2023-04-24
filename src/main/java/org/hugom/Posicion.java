@@ -27,9 +27,11 @@ public class Posicion  {
     }
 
     public static double calcularDistancia(Posicion punto1, Posicion punto2){
-        //distancia = np.around(np.linalg.norm(pos2 - pos1), 2);
         return Math.sqrt((Math.pow(punto2.x -  punto1.x, 2) + Math.pow(punto2.y - punto1.y, 2)));
+    }
 
+    public Posicion copiar(){
+        return new Posicion(this.x, this.y);
     }
 
 

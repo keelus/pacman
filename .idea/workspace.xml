@@ -4,13 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/keelus.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Arreglado el error de path al cargar imagenes de Sprite">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Azul.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Azul.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/ControladorSonido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/ControladorSonido.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Entidad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Entidad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Fantasma.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Fantasma.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Jugador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Jugador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Posicion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Posicion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Rojo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Rojo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Rosa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Rosa.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/SpriteLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/SpriteLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Azul.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Azul.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/ControladorSonido.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/ControladorSonido.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Entidad.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Entidad.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Jugador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Jugador.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Posicion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Posicion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Rojo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Rojo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/SpriteLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/SpriteLoader.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,9 +54,15 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.Java",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -59,11 +83,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1682355159742</updated>
-      <workItem from="1682355161598" duration="136000" />
+      <workItem from="1682355161598" duration="2690000" />
     </task>
+    <task id="LOCAL-00001" summary="Arreglado el error de path al cargar imagenes de Sprite">
+      <created>1682356082981</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1682356082981</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Arreglado el error de path al cargar imagenes de Sprite" />
+    <option name="LAST_COMMIT_MESSAGE" value="Arreglado el error de path al cargar imagenes de Sprite" />
   </component>
 </project>

@@ -23,8 +23,6 @@ public class Controlador {
     public static int puntuacion;
     public static int vidasJugador;
 
-    public static boolean partidaEmpezada = true;
-
     public static Boolean huidaFantasmas = false;
     public static long finHuidaFantasmas;
 
@@ -129,14 +127,20 @@ public class Controlador {
     }
     public static void establecerObjetivosFantasmas(){
         for(String fantasma: listaFantasmas.keySet()){
-            if(listaFantasmas.get("rojo").estado == EstadosFantasma.ATAQUE)
-                ((Rojo)listaFantasmas.get("rojo")).establecerObjetivoAtaque(jugador, null);
-            if(listaFantasmas.get("rosa").estado == EstadosFantasma.ATAQUE)
-                ((Rosa)listaFantasmas.get("rosa")).establecerObjetivoAtaque(jugador, null);
-            if(listaFantasmas.get("azul").estado == EstadosFantasma.ATAQUE)
-                ((Azul)listaFantasmas.get("azul")).establecerObjetivoAtaque(jugador, (Rojo)listaFantasmas.get("rojo")); // El fantasma azul es el unico que depende del antasma rojo para su propio movimiento
-            if(listaFantasmas.get("naranja").estado == EstadosFantasma.ATAQUE)
-                ((Naranja)listaFantasmas.get("naranja")).establecerObjetivoAtaque(jugador, null);
+            if (listaFantasmas.get(fantasma).estado == EstadosFantasma.ATAQUE){
+                if (fantasma.equals("azul"))
+                    (listaFantasmas.get("azul")).establecerObjetivoAtaque(jugador, (Rojo)listaFantasmas.get("rojo")); // El fantasma azul es el unico que depende del antasma rojo para su propio movimiento
+                else
+                    listaFantasmas.get(fantasma).establecerObjetivoAtaque(jugador, null);
+            }
+//            if(listaFantasmas.get("rojo").estado == EstadosFantasma.ATAQUE)
+//                ((Rojo)listaFantasmas.get("rojo")).establecerObjetivoAtaque(jugador, null);
+//            if(listaFantasmas.get("rosa").estado == EstadosFantasma.ATAQUE)
+//                ((Rosa)listaFantasmas.get("rosa")).establecerObjetivoAtaque(jugador, null);
+//            if(listaFantasmas.get("azul").estado == EstadosFantasma.ATAQUE)
+//                ((Azul)listaFantasmas.get("azul")).establecerObjetivoAtaque(jugador, (Rojo)listaFantasmas.get("rojo")); // El fantasma azul es el unico que depende del antasma rojo para su propio movimiento
+//            if(listaFantasmas.get("naranja").estado == EstadosFantasma.ATAQUE)
+//                ((Naranja)listaFantasmas.get("naranja")).establecerObjetivoAtaque(jugador, null);
         }
     }
     public static void forzarHuidaFantasmas(){
@@ -170,14 +174,14 @@ public class Controlador {
     {
         InputStream archivo_ruta = Controlador.class.getResourceAsStream("/datos/mapeado.txt");
         ArrayList<ArrayList<String>> estructuraVisual = new ArrayList<>();
-        ArrayList<ArrayList<String>> estructuraFuncional = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> estructuraFuncional = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(archivo_ruta))) {
             String line;
             while ((line = br.readLine()) != null) { // Iteramos sobre cada linea del mapeado.txt
-                ArrayList<String> caracteresLinea = new ArrayList<String>(Arrays.asList(line.split("(?<=.)"))); // Separamos los caracteres de la linea
-                ArrayList<String> estructuraFuncionalLinea = new ArrayList<String>();
-                ArrayList<String> elementosTranspasables = new ArrayList<String>(Arrays.asList("_", ".", ":", "-", "+")); // Elementos traspasables del mapa (aire, monedas, etc)
+                ArrayList<String> caracteresLinea = new ArrayList<>(Arrays.asList(line.split("(?<=.)"))); // Separamos los caracteres de la linea
+                ArrayList<String> estructuraFuncionalLinea = new ArrayList<>();
+                ArrayList<String> elementosTranspasables = new ArrayList<>(Arrays.asList("_", ".", ":", "-", "+")); // Elementos traspasables del mapa (aire, monedas, etc)
 
                 for(String letra: caracteresLinea){ // Iteramos sobre cada caracter de cada linea del mapeado.txt
                     if (!elementosTranspasables.contains(letra)) { // Si el elemento no es traspasable, entonces lo tomaremos como un obstaculo, sea cual sea (una esquina, una vertical, etc)
@@ -195,11 +199,9 @@ public class Controlador {
         } catch (IOException e) {
             System.err.format("[ERROR] Ha ocurrido un error al leer el mapeado (\"" + archivo_ruta + "\")");
         }
-
-        ArrayList<ArrayList<ArrayList<String>>> ambasEstructuras = new ArrayList<ArrayList<ArrayList<String>>>(Arrays.asList(estructuraVisual, estructuraFuncional));
-
-
-        return ambasEstructuras;
+        
+        
+        return new ArrayList<>(Arrays.asList(estructuraVisual, estructuraFuncional));
     }
 
 
@@ -217,7 +219,7 @@ public class Controlador {
     public static void dibujarNivel(GraphicsContext gc){
         int posX = 14;
         int posY = 34;
-        ArrayList<String> sprites = new ArrayList<String>(Arrays.asList(null, null, null, null, null, null, null));
+        ArrayList<String> sprites = new ArrayList<>(Arrays.asList(null, null, null, null, null, null, null));
 
         if (nivelActual < 1) // Asegurarse de que es 1
             nivelActual = 1;

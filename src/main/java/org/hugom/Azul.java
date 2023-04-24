@@ -13,6 +13,9 @@ public class Azul extends Fantasma{
             return;
 
 
+
+
+
         Posicion posJugador = new Posicion(jugador.getPosicion().getX(), jugador.getPosicion().getY());
         String dirJugador = jugador.getDireccion();
 

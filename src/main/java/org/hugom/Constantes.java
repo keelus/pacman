@@ -20,5 +20,4 @@ public class Constantes {
 
 
     final static Posicion POSICION_JUGADOR_INICIO = new Posicion(16, 26);
-//    final static Posicion POSICION_FANTASMA_ROJO_INICIO = new POsicion()
 }

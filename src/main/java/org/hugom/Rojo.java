@@ -1,7 +1,4 @@
 package org.hugom;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 public class Rojo extends Fantasma{
