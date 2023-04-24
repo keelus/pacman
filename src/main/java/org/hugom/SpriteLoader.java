@@ -6,7 +6,9 @@ import javafx.scene.image.Image;
 public class SpriteLoader {
     public static HashMap<String, Image> loadSprites(String imagePath, HashMap<String, HojaSprites.DatoSprite> spriteData) {
         File file = new File(imagePath);
-        String asdf = file.getAbsolutePath();
+        //String asdf = file.getAbsolutePath();
+        String asdf = imagePath;
+        System.out.println(asdf);
         Image spriteSheetOriginal = new Image(SpriteLoader.class.getResourceAsStream(asdf));
 
         Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream(asdf), spriteSheetOriginal.getWidth() * Constantes.ESCALADO_SPRITE, spriteSheetOriginal.getHeight() * Constantes.ESCALADO_SPRITE, false, false);
