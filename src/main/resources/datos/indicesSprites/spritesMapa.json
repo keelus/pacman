@@ -378,25 +378,5 @@
       296,
       0
     ]
-  },
-  "-":{
-    "dimensiones": [
-      8,
-      8
-    ],
-    "coordenadas": [
-      304,
-      0
-    ]
-  },
-  "+":{
-    "dimensiones": [
-      8,
-      8
-    ],
-    "coordenadas": [
-      312,
-      0
-    ]
   }
 }

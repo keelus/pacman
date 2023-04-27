@@ -17,6 +17,8 @@ public class Constantes {
     final static int COOLDOWN_MUERTE_JUGADOR = 1000;
     final static int COOLDOWN_MUERTE_JUGADOR_ANIMACION = 100;
     final static int COOLDOWN_INICIO_GAME = 4000;
+    final static int VIDAPORPUNTUACION = 5000;
+    final static int VIDASMAX = 5;
 
 
     final static Posicion POSICION_JUGADOR_INICIO = new Posicion(16, 26);

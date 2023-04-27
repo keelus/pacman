@@ -1,8 +1,8 @@
 package org.hugom;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.json.simple.parser.ParseException;
-
 import java.io.*;
 import java.util.*;
 
@@ -17,6 +17,7 @@ public class Controlador {
     static ArrayList<ArrayList<String>> estructuraFuncionalMapa;
 
     static HojaSprites hojaSprites;
+    static HojaSprites hojaSprites_blanca;
     static HojaSprites hojaSpritesNivel;
 
     public static int nivelActual;
@@ -38,6 +39,15 @@ public class Controlador {
     public static double juegoMomentoInicio = ahora() + Constantes.COOLDOWN_INICIO_GAME;
 
     public static int ventanaActual = 0;
+    public static boolean nivelFinalizado = false;
+    public static double momentoParpadeo = -1;
+    public static double momentoAvance = -1;
+    public static boolean nivelParpadeando = false;
+    public static boolean parpadeoBlanco;
+    public static double siguienteParpadeo = -1;
+
+
+    public static ArrayList<Integer> vidasDadas = new ArrayList<>();
 
 
 
@@ -48,6 +58,7 @@ public class Controlador {
 
         hojaSpritesNivel = new HojaSprites("/media/imagen/frutas.png", "/datos/indicesSprites/spritesFrutas.json");
         hojaSprites = new HojaSprites("/media/imagen/spritesheet.png", "/datos/indicesSprites/spritesMapa.json");
+        hojaSprites_blanca = new HojaSprites("/media/imagen/spritesheet_blanco.png", "/datos/indicesSprites/spritesMapa.json");
 
         puntuacion = 0;
         finHuidaFantasmas = ahora();
@@ -82,10 +93,43 @@ public class Controlador {
     }
     public static void dibujarFantasmas(GraphicsContext gc){
         if (perdido) return;
+        if (nivelParpadeando) return;
         for(String fantasma: listaFantasmas.keySet()){
             listaFantasmas.get(fantasma).dibujar(gc);
         }
     }
+
+    /**
+     * Metodo que cuenta y devuelve la cantidad de frutas/potenciadores del mapa.
+     * @return la cantidad de frutas/potenciadores, en integer.
+     */
+    public static int comprobarFrutas(){
+        int contadorFrutas = 0;
+        ArrayList<String> simbolosFruta = new ArrayList<>(Arrays.asList(".", ":", "+"));
+        for(int i = 0; i < estructuraFuncionalMapa.size(); i++)
+            for(int j = 0; j < estructuraFuncionalMapa.get(i).size(); j++)
+                if (simbolosFruta.contains(estructuraFuncionalMapa.get(i).get(j)))
+                    contadorFrutas += 1;
+        return contadorFrutas;
+    }
+
+    public static void siguienteNivel(){
+        ArrayList<ArrayList<ArrayList<String>>> estructurasCargadas = cargar_estructura();
+        estructuraVisualMapa = estructurasCargadas.get(0);
+        estructuraFuncionalMapa = estructurasCargadas.get(1);
+
+        nivelActual += 1;
+        nivelFinalizado = false;
+        nivelParpadeando = false;
+        reiniciarPosiciones(2000);
+        juegoEnCurso = false;
+        juegoMomentoInicio = ahora() + 2000;
+
+
+
+
+    }
+
     public static void reiniciarPosiciones(double miliSegundosExtra){
         jugador.reiniciar(miliSegundosExtra);
         for(String fantasma: listaFantasmas.keySet())
@@ -211,7 +255,11 @@ public class Controlador {
                 double posX = h * Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA - 2 * Constantes.CUADRICULA_MAPA * Constantes.ESCALADO_SPRITE;
                 double posY = v * Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA;
 
-                gc.drawImage(hojaSprites.getSpriteData().get(estructuraVisualMapa.get(v).get(h)), posX, posY, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
+
+                if (parpadeoBlanco)
+                    gc.drawImage(hojaSprites_blanca.getSpriteData().get(estructuraVisualMapa.get(v).get(h)), posX, posY, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
+                else
+                    gc.drawImage(hojaSprites.getSpriteData().get(estructuraVisualMapa.get(v).get(h)), posX, posY, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
             }
         }
     }

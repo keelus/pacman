@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -19,36 +20,7 @@ public class Jugador extends Entidad {
     double animacionMuerteInicio = -1;
     boolean animacionMuerteFinalizada = false;
 
-
-
-
-
     long intervalo2 = 100; // ms * 1M = ns
-
-    public boolean isIntentandoNuevaDireccion() {
-        return intentandoNuevaDireccion;
-    }
-    public void setIntentandoNuevaDireccion(boolean intentandoNuevaDireccion) {
-        this.intentandoNuevaDireccion = intentandoNuevaDireccion;
-    }
-    public String getIntentandoNuevaDireccionDir() {
-        return intentandoNuevaDireccionDir;
-    }
-    public void setIntentandoNuevaDireccionDir(String intentandoNuevaDireccionDir) {
-        this.intentandoNuevaDireccionDir = intentandoNuevaDireccionDir;
-    }
-    public int getIntentandoNuevaDireccionRestantes() {
-        return intentandoNuevaDireccionRestantes;
-    }
-    public void setIntentandoNuevaDireccionRestantes(int intentandoNuevaDireccionRestantes) {
-        this.intentandoNuevaDireccionRestantes = intentandoNuevaDireccionRestantes;
-    }
-    public long getSiguienteWaka() {
-        return siguienteWaka;
-    }
-    public void setSiguienteWaka(long siguienteWaka) {
-        this.siguienteWaka = siguienteWaka;
-    }
     public boolean isConVida() {
         return conVida;
     }
@@ -68,24 +40,20 @@ public class Jugador extends Entidad {
 
         this.setSiguienteMovimiento(Controlador.ahora());
         this.setSiguienteFrame(Controlador.ahora());
-
-
     }
 
     @Override
     void dibujar(GraphicsContext gc) {
-
-        //System.out.println(getHojaSprites());
-        double dim_fantasma = getHojaSprites().getSpriteData().get("frame_" + getFrameActual()).getWidth();
-        double posX_fantasma = this.getPosicion().getX() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(15 / 2* Constantes.ESCALADO_SPRITE)  - 2 * 8 * Constantes.ESCALADO_SPRITE;
-        double posY_fantasma = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(16 / 2* Constantes.ESCALADO_SPRITE) ;
+        double dimensionJugador = getHojaSprites().getSpriteData().get("frame_" + getFrameActual()).getWidth();
+        double posicionX =this.getPosicion().getX() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(15 / 2* Constantes.ESCALADO_SPRITE)  - 2 * 8 * Constantes.ESCALADO_SPRITE;
+        double posicionY = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(16 / 2* Constantes.ESCALADO_SPRITE) ;
 
 
         String sprite = "";
         sprite = "frame_" + getFrameActual();
 
-        //frames van de 3 a 13
-        //frames van de 0 a 10
+        // Si el jugador no se encuentra con vida, se estara mostrando la animacion de morir
+        // Sprites van desde index 3 al 13
         if (!this.conVida && Controlador.perdido){
             if (!this.animacionMuerteEmpezada) {
                 this.animacionMuerteEmpezada = true;
@@ -104,18 +72,14 @@ public class Jugador extends Entidad {
         // Sprite original del jugador, mirando hacia la derecha
         ImageView spriteJugador = new ImageView(getHojaSprites().getSpriteData().get(sprite));
 
-
-
         // Giramos la imagen si el jugador apunta hacia un lado que no sea la derecha
-
-
         if (this.conVida)
-        if (getDireccion() == "izq")
-            spriteJugador.setRotate(180);
-        else if (getDireccion() == "arr")
-            spriteJugador.setRotate(-90);
-        else if (getDireccion() == "abj")
-            spriteJugador.setRotate(90);
+            if (getDireccion().equals("izq"))
+                spriteJugador.setRotate(180);
+            else if (getDireccion().equals("arr"))
+                spriteJugador.setRotate(-90);
+            else if (getDireccion().equals("abj"))
+                spriteJugador.setRotate(90);
 
         // Generamos una captura de la imagen y la guardamos
         WritableImage spriteFinal = new WritableImage((int)spriteJugador.getBoundsInLocal().getWidth(), (int)spriteJugador.getBoundsInLocal().getHeight());
@@ -123,23 +87,16 @@ public class Jugador extends Entidad {
 
         spriteFinal = Utilidades.aplicarTransparencia(spriteFinal);
 
-        //gc.drawImage(getHojaSprites().getSpriteData().get("frame_1"), posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
-        gc.drawImage(spriteFinal, posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
-
-
-
+        gc.drawImage(spriteFinal, posicionX, posicionY, dimensionJugador, dimensionJugador);
     }
 
     @Override
         public void mover() {
             Posicion posicionDeseada = posicionEnDireccion(getPosicion(), getDireccion());
             if (validarMovimiento(posicionDeseada) && Controlador.ahora() > getSiguienteFrame()){
-                if(getFrameActual() == 0)
-                    setFrameActual(1);
-                else if (getFrameActual() == 1)
-                    setFrameActual(2);
-                else
-                    setFrameActual(0);
+                if(getFrameActual() == 0) setFrameActual(1);
+                else if (getFrameActual() == 1) setFrameActual(2);
+                else setFrameActual(0);
 
                 setSiguienteFrame(Controlador.ahora() + intervalo2);
             }
@@ -148,60 +105,61 @@ public class Jugador extends Entidad {
                 setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_JUGADOR);
 
                 String direccion = intentandoNuevaDireccionDir;
-                if (intentandoNuevaDireccion && intentarNuevaDireccion(direccion))
-                    System.out.println("Direccion cambiada correctamente.");
-                else{
+                if (!intentandoNuevaDireccion || !intentarNuevaDireccion(direccion))
                     if (validarMovimiento(posicionDeseada))
                         actualizarPosicion(posicionDeseada);
-                }
             }
 
             detectarComida();
-
-
         }
 
     void detectarComida() {
-        // TODO Añadir sonidos
-        ArrayList<String> comidaPeque = new ArrayList<String>(Arrays.asList(".", "+"));
+        HashMap<String, ArrayList<Object>> frutasReemplazos = new HashMap<>();
+        frutasReemplazos.put(".", new ArrayList<>(Arrays.asList("_", Constantes.PUNTUACION_FRUTA_PEQ)));
+        frutasReemplazos.put(":", new ArrayList<>(Arrays.asList("_", Constantes.PUNTUACION_FRUTA_GRA)));
 
-        ArrayList<ArrayList<String>> estructuraFuncionalNueva = Controlador.estructuraFuncionalMapa;
-        ArrayList<ArrayList<String>> estructuraVisualNueva = Controlador.estructuraVisualMapa;
 
         int posX = getPosicion().getX();
         int posY = getPosicion().getY();
         String elementoEnPosicion = Controlador.estructuraFuncionalMapa.get(posY).get(posX);
 
-        // TODO Hacer mas bonita esta parte
-        if (elementoEnPosicion.equals(".") || elementoEnPosicion.equals("+") ){ // es una fruta pequeña (Si es . es fruta pequeña normal. Si es + sera fruta pequeña especial (visual igua, pero funcionamiento diferente de fantasmas, zona spawn))
-            Controlador.puntuacion += Constantes.PUNTUACION_FRUTA_PEQ;
+        if(frutasReemplazos.containsKey(elementoEnPosicion)){
+            Controlador.puntuacion += (int)frutasReemplazos.get(elementoEnPosicion).get(1);
+
+
+            Controlador.estructuraFuncionalMapa.get(posY).set(posX, (String)frutasReemplazos.get(elementoEnPosicion).get(0));
+            Controlador.estructuraVisualMapa.get(posY).set(posX, (String)frutasReemplazos.get(elementoEnPosicion).get(0));
+
+
             if (Controlador.ahora() > siguienteWaka){
                 Controlador.controladorSonido.getJugadorComer().play();
                 siguienteWaka = Controlador.ahora() + 200;
             }
-            if (elementoEnPosicion.equals(".")){
-                estructuraFuncionalNueva.get(posY).set(posX, "_");
-                estructuraVisualNueva.get(posY).set(posX, "_");
-            }
-            else{
-                estructuraFuncionalNueva.get(posY).set(posX, "-");
-                estructuraVisualNueva.get(posY).set(posX, "-");
-            }
-        } else if (elementoEnPosicion.equals(":")){
-            Controlador.puntuacion += Constantes.PUNTUACION_FRUTA_GRA;
-            Controlador.forzarHuidaFantasmas();
-            estructuraFuncionalNueva.get(posY).set(posX, "_");
-            estructuraVisualNueva.get(posY).set(posX, "_");
 
+            if(elementoEnPosicion.equals(":")){
+                Controlador.forzarHuidaFantasmas();
+            }
+
+            if (Controlador.vidasJugador < Constantes.VIDASMAX) {
+                int num = Math.round((float) Controlador.puntuacion / Constantes.VIDAPORPUNTUACION) * Constantes.VIDAPORPUNTUACION;
+                if (Controlador.puntuacion > Constantes.VIDAPORPUNTUACION && (num) % Constantes.VIDAPORPUNTUACION == 0 && !Controlador.vidasDadas.contains(num)) {
+                    Controlador.vidasJugador += 1;
+                    Controlador.vidasDadas.add(num);
+                    Controlador.controladorSonido.getVidaAnyadida().play();
+
+                }
+            }
+
+            if (Controlador.comprobarFrutas() == 0) { // El nivel ha finalizado.
+                Controlador.momentoParpadeo = Controlador.ahora() + 2000;
+                Controlador.momentoAvance = Controlador.ahora() + 5000;
+                Controlador.nivelFinalizado = true;
+                Controlador.controladorSonido.getHuidaFantasmas().stop();
+            }
         }
-
-        Controlador.estructuraFuncionalMapa = estructuraFuncionalNueva;
-        Controlador.estructuraVisualMapa = estructuraVisualNueva;
-
     }
 
     void actualizarPosicion(Posicion nuevaPosicion){
-        //System.out.println("Posicion actualizada a " + nuevaPosicion);
         setPosicion(nuevaPosicion);
     }
 
@@ -209,12 +167,10 @@ public class Jugador extends Entidad {
         if (validarMovimiento(posicionEnDireccion(getPosicion(), nuevaDireccion))){
             setDireccion(nuevaDireccion);
             return true;
-        } else {
-            if (actualizadaManual)
-                intentarNuevaDireccion(nuevaDireccion);
         }
+        if (actualizadaManual)
+            intentarNuevaDireccion(nuevaDireccion);
         return false;
-
     }
 
 
@@ -225,9 +181,16 @@ public class Jugador extends Entidad {
         return !obstaculos.contains(Controlador.estructuraFuncionalMapa.get(posicionDeseada.getY()).get(posicionDeseada.getX()));
     }
 
+    /*
+    * Funcion  para hacer el control mas suave.
+    * Una vez que el jugador pulse una tecla, si la direccion a la que quiere ir es incorrecta (hay un obstaculo)
+    * entonces, esta funcion intentara hacer ese mismo movimiento los siguientes 5 frames.
+    * Esto ya que, a veces el jugador puede darle una nueva direccion en el frame incorrecto y no funcionar.
+    * @param la direccion a la que se quiere intentar mover
+    * @return si se ha podido mover a la nueva direccion.
+     */
     boolean intentarNuevaDireccion(String direccionAIntentar){
         if (intentandoNuevaDireccion) {
-            System.out.println("Intentando actualizar direccion previa...");
             intentandoNuevaDireccionRestantes--;
 
             if (actualizarDireccion(intentandoNuevaDireccionDir, false) || intentandoNuevaDireccionRestantes == -1) { // Si se ha conseguido actualizar la direccion, o no quedan intentos restantes
@@ -236,19 +199,17 @@ public class Jugador extends Entidad {
                 intentandoNuevaDireccionDir = null;
 
                 // TODO de alguna manera hacer el now global, o handlear el timing desde Globales.
-                mover();
                 setSiguienteMovimiento(Controlador.ahora()); // Revisar
                 return true;
             }
         }
-        else { // Se inicia el intento automatico de cambiar la direccion a la que el jugador presiono (asi, si chocaria contra una pared por timing de milisegundos, se reintenta un par de veces, asi la experiencia de control es mejor
-            System.out.println("Intento automatico iniciado");
+        else {
+            // Si no se esta intentando ya, se inicia un nuevo intento para cambiar automaticamente a esa direccion.
             intentandoNuevaDireccionDir = direccionAIntentar;
             intentandoNuevaDireccion = true;
             intentandoNuevaDireccionRestantes = 4;
         }
-
-        return false; // Devolvemos que no se ha conseguido cambiar por ahora
+        return false;
     }
 
     @Override

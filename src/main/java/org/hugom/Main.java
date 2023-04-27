@@ -1,22 +1,36 @@
 package org.hugom;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
+
+import java.io.File;
 import java.io.IOException;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import org.json.simple.parser.ParseException;
 import javafx.scene.text.*;
-import javafx.scene.image.ImageView;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.scene.image.ImageView ;
 
 public class Main extends Application {
 
-    ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/media/imagen/logo.png")));
+
+
+    Image logoSource = new Image(getClass().getResourceAsStream("/media/imagen/logo.png"));
+
+    ImageView logo = new ImageView(logoSource);
 
 
     public Main() throws IOException, ParseException {
@@ -25,12 +39,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException, ParseException {
+        primaryStage.setTitle("Pacman - por Hugo Moreda");
+
         Font fuente = Font.loadFont(getClass().getResourceAsStream("/media/tipografia/fuente.ttf"), Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
 
 
         Text textoPuntuacion = new Text(0, 30, "HIGH SCORE\n" + 0 + "  ");
-        textoPuntuacion.setX(Constantes.ANCHOVENTANA/2 - textoPuntuacion.getLayoutBounds().getWidth() / 2 - 15);
         textoPuntuacion.setFont(fuente);
+        textoPuntuacion.setX(Constantes.ANCHOVENTANA/2 - textoPuntuacion.getLayoutBounds().getWidth() / 2 - 15);
         textoPuntuacion.setFill(Color.WHITE);
 
         Text textoReady = new Text(0, 500, "Ready!");
@@ -80,27 +96,25 @@ public class Main extends Application {
         root.getChildren().add(textoControles);
         root.getChildren().add(logo);
 
-        Controlador.controladorSonido.getJugadorComer().play();
-
 
 
 
 
         // Teclas
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP) {
-                Controlador.jugador.actualizarDireccion("arr", true);
-            } else if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
-                Controlador.jugador.actualizarDireccion("izq", true);
-            } else if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) {
-                Controlador.jugador.actualizarDireccion("abj", true);
-            } else if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
-                Controlador.jugador.actualizarDireccion("der", true);
-            }  else if (event.getCode() == KeyCode.ENTER){
-                Controlador.ventanaActual += 1;
+
+            if(Controlador.juegoEnCurso && Controlador.jugador.isConVida()){
+                if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP) {
+                    Controlador.jugador.actualizarDireccion("arr", true);
+                } else if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
+                    Controlador.jugador.actualizarDireccion("izq", true);
+                } else if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) {
+                    Controlador.jugador.actualizarDireccion("abj", true);
+                } else if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
+                    Controlador.jugador.actualizarDireccion("der", true);
+                }
             }
-            // ## TECLAS DEBUG ##
-            else if (event.getCode() == KeyCode.O){
+            if (event.getCode() == KeyCode.O){
                 Controlador.nivelActual++;
             } else if (event.getCode() == KeyCode.K){
                 Controlador.nivelActual--;
@@ -126,8 +140,9 @@ public class Main extends Application {
                 Controlador.jugador.setFrameActual(frame);
             } else if (event.getCode() == KeyCode.Q){
                 Controlador.ventanaActual -= 1;
+            } else if (event.getCode() == KeyCode.ENTER){
+                Controlador.ventanaActual += 1;
             }
-            // ## FIN TECLAS DEBUG ##
         });
 
         // Frames
@@ -142,6 +157,16 @@ public class Main extends Application {
                     textoAutor.setVisible(true);
                     textoControles.setVisible(true);
                     logo.setVisible(true);
+                    //gc.drawImage(spriteSheetOriginal, 50, 50, 20, 20);
+
+//                    WritableImage spriteFinal = new WritableImage((int)spriteJugador.getBoundsInLocal().getWidth(), (int)spriteJugador.getBoundsInLocal().getHeight());
+//                    spriteJugador.snapshot(null, spriteFinal);
+//
+//                    spriteFinal = Utilidades.aplicarTransparencia(spriteFinal);
+//
+//                    //gc.drawImage(getHojaSprites().getSpriteData().get("frame_1"), posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
+//                    gc.drawImage(spriteFinal, posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
+
 
                     gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 }
@@ -155,6 +180,7 @@ public class Main extends Application {
 
 
                     if (!Controlador.juegoEnCurso) {
+                        textoReady.setText("Ready!");
                         if (!Controlador.controladorSonido.getInicioJuego().isPlaying()){
                             Controlador.controladorSonido.getInicioJuego().play();
                             Controlador.iniciarJuego();
@@ -187,13 +213,13 @@ public class Main extends Application {
 
                     Controlador.jugador.dibujar(gc);
 
-                    if (Controlador.juegoEnCurso && Controlador.jugador.isConVida())
+                    if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
                         Controlador.jugador.mover();
 
 
                     Controlador.establecerObjetivosFantasmas();
 
-                    if (Controlador.juegoEnCurso && Controlador.jugador.isConVida())
+                    if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
                         Controlador.moverFantasmas();
 
                     Controlador.dibujarFantasmas(gc);
@@ -205,6 +231,28 @@ public class Main extends Application {
                             Controlador.controladorSonido.getMuerteJugador().play();
                         }
                     }
+
+                    if (Controlador.ahora() > Controlador.momentoParpadeo && Controlador.nivelFinalizado && !Controlador.nivelParpadeando){
+                        Controlador.nivelParpadeando = true;
+                    }
+
+                    if (Controlador.nivelParpadeando){
+                        if (Controlador.ahora() > Controlador.siguienteParpadeo){
+                            if (Controlador.parpadeoBlanco){
+                                Controlador.parpadeoBlanco = false;
+                            } else Controlador.parpadeoBlanco = true;
+
+//                            System.out.println(Controlador.parpadeoBlanco);
+                            Controlador.siguienteParpadeo = Controlador.ahora() + 250;
+                        }
+                    }
+
+                    if (Controlador.ahora() > Controlador.momentoAvance && Controlador.nivelFinalizado){
+                        System.out.println("Avanzar!");
+                        Controlador.siguienteNivel();
+                    }
+
+
 
 
                     textoPuntuacion.setTextAlignment(TextAlignment.RIGHT);

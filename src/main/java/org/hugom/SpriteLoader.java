@@ -1,12 +1,11 @@
 package org.hugom;
+import java.io.File;
 import java.util.HashMap;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
-
 public class SpriteLoader {
     public static HashMap<String, Image> loadSprites(String imagePath, HashMap<String, HojaSprites.DatoSprite> spriteData) {
         Image spriteSheetOriginal = new Image(SpriteLoader.class.getResourceAsStream(imagePath));
-
         Image spriteSheet = new Image(SpriteLoader.class.getResourceAsStream(imagePath), spriteSheetOriginal.getWidth() * Constantes.ESCALADO_SPRITE, spriteSheetOriginal.getHeight() * Constantes.ESCALADO_SPRITE, false, false);
 
         HashMap<String, Image> sprites = new HashMap<>();

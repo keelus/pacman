@@ -1,6 +1,10 @@
 package org.hugom;
 import javafx.scene.media.AudioClip;
 
+import javax.sound.sampled.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+
 public class ControladorSonido {
 
     private AudioClip jugadorComer;
@@ -10,6 +14,7 @@ public class ControladorSonido {
     private AudioClip muerteJugador;
     private AudioClip vueltaSpawnFantasma;
     private AudioClip inicioJuego;
+    private AudioClip vidaAnyadida;
 
     public AudioClip getJugadorComer() {
         return jugadorComer;
@@ -32,6 +37,9 @@ public class ControladorSonido {
     public AudioClip getInicioJuego() {
         return inicioJuego;
     }
+    public AudioClip getVidaAnyadida() {
+        return vidaAnyadida;
+    }
 
 
     public ControladorSonido() {
@@ -42,7 +50,7 @@ public class ControladorSonido {
         muerteJugador = new AudioClip(getClass().getResource("/media/audio/muerte.wav").toString());
         vueltaSpawnFantasma = new AudioClip(getClass().getResource("/media/audio/retreating.wav").toString());
         inicioJuego = new AudioClip(getClass().getResource("/media/audio/game_start.wav").toString());
-
+        vidaAnyadida = new AudioClip(getClass().getResource("/media/audio/extend.wav").toString());
     }
 
 }

@@ -41,38 +41,8 @@ public abstract class Fantasma extends Entidad {
     public EstadosFantasma getEstadoAnterior() {
         return estadoAnterior;
     }
-    public void setEstadoAnterior(EstadosFantasma estadoAnterior) {
-        this.estadoAnterior = estadoAnterior;
-    }
-    public Posicion getObjetivoDispersion() {
-        return objetivoDispersion;
-    }
-    public void setObjetivoDispersion(Posicion objetivoDispersion) {
-        this.objetivoDispersion = objetivoDispersion;
-    }
-    public Posicion getPosicionSpawnOjos() {
-        return posicionSpawnOjos;
-    }
-    public void setPosicionSpawnOjos(Posicion posicionSpawnOjos) {
-        this.posicionSpawnOjos = posicionSpawnOjos;
-    }
     public String getColorFantasma() {
         return colorFantasma;
-    }
-    public void setColorFantasma(String colorFantasma) {
-        this.colorFantasma = colorFantasma;
-    }
-    public double getEsperaSpawnInicial() {
-        return esperaSpawnInicial;
-    }
-    public void setEsperaSpawnInicial(double esperaSpawnInicial) {
-        this.esperaSpawnInicial = esperaSpawnInicial;
-    }
-    public double getMomentoSpawnInicial() {
-        return momentoSpawnInicial;
-    }
-    public void setMomentoSpawnInicial(double momentoSpawnInicial) {
-        this.momentoSpawnInicial = momentoSpawnInicial;
     }
     /* Fin setters y getters */
 
@@ -80,14 +50,12 @@ public abstract class Fantasma extends Entidad {
     public Fantasma(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, Color colorDebug, Posicion objetivo, EstadosFantasma estado, Posicion objetivoDispersion, Posicion posicionSpawnOjos, String colorFantasma, double esperaSpawnInicial) {
         super(posicion, direccion, hojaSprites, siguienteFrame, frameActual, siguienteMovimiento, colorDebug);
         this.objetivo = objetivo;
-        if (direccion.equals("izq"))
-            this.direccionContraria = "der";
-        else if (direccion.equals("der"))
-            this.direccionContraria = "izq";
-        else if (direccion.equals("arr"))
-            this.direccionContraria = "abj";
-        else if (direccion.equals("abj"))
-            this.direccionContraria = "arr";
+        switch (direccion) {
+            case "izq": this.direccionContraria = "der"; break;
+            case "der": this.direccionContraria = "izq"; break;
+            case "arr": this.direccionContraria = "abj"; break;
+            case "abj": this.direccionContraria = "arr"; break;
+        }
         this.estado = estado;
         this.objetivoDispersion = objetivoDispersion;
         this.posicionSpawnOjos = posicionSpawnOjos;
@@ -119,8 +87,7 @@ public abstract class Fantasma extends Entidad {
         }
 
         if (getEstado() == EstadosFantasma.ESPERASPAWNINICIAL){
-            Posicion pos = new Posicion(new Random().nextInt(3) + 14, 16);
-            this.objetivo = pos;
+            this.objetivo = new Posicion(new Random().nextInt(3) + 14, 16);
         }
 
         if (this.estado == EstadosFantasma.DISPERSION) setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_FANTASMA_DISPERSION);
@@ -178,115 +145,83 @@ public abstract class Fantasma extends Entidad {
                     this.cambiarEstado(EstadosFantasma.ATAQUE);
             }
         }
-
-
-//        Posicion posicionDeseada = posicionEnDireccion(getPosicion(), getDireccion());
-//        if (validarMovimiento(posicionDeseada) && Controlador.ahora() > getSiguienteFrame()){
-//            if(getFrameActual() == 0)
-//                setFrameActual(1);
-//            else if (getFrameActual() == 1)
-//                setFrameActual(2);
-//            else
-//                setFrameActual(0);
-//
-//            setSiguienteFrame(Controlador.ahora() + intervalo2);
-//        }
-//
-//        if (Controlador.ahora() > getSiguienteMovimiento()){
-//            setSiguienteMovimiento(Controlador.ahora() + intervalo);
-//
-//            String direccion = intentandoNuevaDireccionDir;
-//            if (intentandoNuevaDireccion && intentarNuevaDireccion(direccion))
-//                System.out.println("Direccion cambiada correctamente.");
-//            else{
-//                if (validarMovimiento(posicionDeseada))
-//                    actualizarPosicion(posicionDeseada);
-//            }
-//        }
-//
-//        detectarComida();
-
-
     }
 
     public HashMap<String, Boolean> posicionesValidas(){
-        HashMap<String, Boolean> direcciones = new HashMap<String, Boolean>();
-        direcciones.put("arr", true);
-        direcciones.put("izq", true);
-        direcciones.put("abj", true);
-        direcciones.put("der", true);
+        HashMap<String, Boolean> direcciones = new HashMap<String, Boolean>(){{
+            put("arr", true);
+            put("izq", true);
+            put("abj", true);
+            put("der", true);
+        }};
 
-        String direccionAtras = getDireccionContraria();
 
-        for(String direccion: direcciones.keySet()){
+        // Comprobamos las cuatro direcciones
+        for (String direccion: direcciones.keySet()){
             Posicion posicion = posicionEnDireccion(getPosicion(), direccion);
-            if(posicion.getX() == 32)
+
+            // Evitamos que salga del mapeado
+            if (posicion.getX() == 32)
                 posicion.setX(0);
             else if (posicion.getX() == -1)
                 posicion.setX(31);
 
-            if (this.estado == EstadosFantasma.MUERTO || this.estado == EstadosFantasma.ESPERASPAWN){
-                if(Controlador.estructuraFuncionalMapa.get(posicion.getY()).get(posicion.getX()) == "#" || direccion == direccionAtras)
+            if (direccion.equals(getDireccionContraria()))
+                direcciones.replace(direccion, false);
+            else {
+                if(Controlador.estructuraFuncionalMapa.get(posicion.getY()).get(posicion.getX()).equals("#"))
                     direcciones.replace(direccion, false);
-            } else{
-                if (Controlador.estructuraFuncionalMapa.get(posicion.getY()).get(posicion.getX()) == "#" ||
-                        Controlador.estructuraFuncionalMapa.get(posicion.getY()).get(posicion.getX()) == "G" || direccion == direccionAtras)
-                    direcciones.replace(direccion, false);
+                else if (Controlador.estructuraFuncionalMapa.get(posicion.getY()).get(posicion.getX()).equals("G"))
+                    if (this.estado != EstadosFantasma.MUERTO && this.estado != EstadosFantasma.ESPERASPAWN) // La "G" => Puerta del SPAWN. Solo traspasable en estado MUERTO o de ESPERA
+                        direcciones.replace(direccion, false);
             }
         }
-
-        if (Controlador.estructuraFuncionalMapa.get(getPosicion().getY()).get(getPosicion().getX()) == "-" ||
-                Controlador.estructuraFuncionalMapa.get(getPosicion().getY()).get(getPosicion().getX()) == "+")
-            direcciones.replace("arr", false);
 
         return direcciones;
     }
 
     public String calcularDistancias(){
-        Posicion pos2 = getObjetivo();
-        //direccionesValidas = posiciones
         HashMap<String, Boolean> direccionesValidas = posicionesValidas();
         HashMap<String, Double> direccionesValores = new HashMap<>();
 
         for(String direccion: direccionesValidas.keySet()){
-            if(direccionesValidas.get(direccion) == false){
+            if(!direccionesValidas.get(direccion)){
                 direccionesValores.put(direccion, null);
                 continue;
             }
 
-            Posicion pos1 = posicionEnDireccion(getPosicion(), direccion);
+            Posicion posInicial = posicionEnDireccion(getPosicion(), direccion);
 
-
-
+//            ## DEBUG LINEA
 //            gc.setStroke(getColorDebug());
 //            gc.setLineWidth(2);
-            Posicion pos1Linea = new Posicion(pos1.getX(), pos1.getY());
-            Posicion pos2Linea = new Posicion(pos2.getX(), pos2.getY());
-
-            pos1Linea.setX(Math.round(pos1Linea.getX() * 8 * Constantes.ESCALADO_SPRITE + 8 * Constantes.ESCALADO_SPRITE / 2 - 2 * 8 * Constantes.ESCALADO_SPRITE));
-            pos1Linea.setY(Math.round(pos1Linea.getY() * 8 * Constantes.ESCALADO_SPRITE + 8 * Constantes.ESCALADO_SPRITE / 2));
-
-            pos2Linea.setX(Math.round(pos2Linea.getX() * 8 * Constantes.ESCALADO_SPRITE + 8 * Constantes.ESCALADO_SPRITE / 2 - 2 * 8 * Constantes.ESCALADO_SPRITE));
-            pos2Linea.setY(Math.round(pos2Linea.getY() * 8 * Constantes.ESCALADO_SPRITE + 8 * Constantes.ESCALADO_SPRITE / 2));
-
-
+//            Posicion pos1Linea = new Posicion(pos1.getX(), pos1.getY());
+//            Posicion pos2Linea = new Posicion(getObjetivo().getX(), getObjetivo().getY());
+//
+//            pos1Linea.setX(Math.round(pos1Linea.getX() * 8 * Constantes.ESCALADO_SPRITE + 8 * Constantes.ESCALADO_SPRITE / 2 - 2 * 8 * Constantes.ESCALADO_SPRITE));
+//            pos1Linea.setY(Math.round(pos1Linea.getY() * 8 * Constantes.ESCALADO_SPRITE + 8 * Constantes.ESCALADO_SPRITE / 2));
+//
+//            pos2Linea.setX(Math.round(pos2Linea.getX() * 8 * Constantes.ESCALADO_SPRITE + 8 * Constantes.ESCALADO_SPRITE / 2 - 2 * 8 * Constantes.ESCALADO_SPRITE));
+//            pos2Linea.setY(Math.round(pos2Linea.getY() * 8 * Constantes.ESCALADO_SPRITE + 8 * Constantes.ESCALADO_SPRITE / 2));
+//
 //            if (estado != EstadosFantasma.HUIDA)
 //                gc.strokeLine(pos1Linea.getX(), pos1Linea.getY(), pos2Linea.getX(), pos2Linea.getY());
 
-            //Float distancia =
-            double distancia = Posicion.calcularDistancia(pos1, pos2);
+
+
+            double distancia = Posicion.calcularDistancia(posInicial, getObjetivo());
             direccionesValores.put(direccion, distancia);
         }
 
 
-        double distanciaMinimaDouble = 0.0;
+        double distanciaMinimaVal = 0.0;
         String distanciaMinimaDir = null;
 
         for(String direccion: direccionesValores.keySet()){
             if(direccionesValores.get(direccion) == null)
                 continue;
-            if(direccionesValores.get(direccion) < distanciaMinimaDouble || distanciaMinimaDir == null){
-                distanciaMinimaDouble = direccionesValores.get(direccion);
+            if(direccionesValores.get(direccion) < distanciaMinimaVal || distanciaMinimaDir == null){
+                distanciaMinimaVal = direccionesValores.get(direccion);
                 distanciaMinimaDir = direccion;
             }
 
@@ -304,44 +239,45 @@ public abstract class Fantasma extends Entidad {
         calcularDistancias();
         String sprite = "";
 
-        //System.out.println(getHojaSprites());
-        //double dim_fantasma = getHojaSprites().getSpriteData().get("frame_" + getFrameActual()).getWidth();
-        double dim_fantasma = getHojaSprites().getSpriteData().get(getColorFantasma() + "_" + getDireccion() + "_" + getFrameActual()).getWidth();
-        double posX_fantasma = this.getPosicion().getX() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2* Constantes.ESCALADO_SPRITE)  - 2 * 8 * Constantes.ESCALADO_SPRITE;
-        double posY_fantasma = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2* Constantes.ESCALADO_SPRITE) ;
+        double dimensionFantasma = getHojaSprites().getSpriteData().get(getColorFantasma() + "_" + getDireccion() + "_" + getFrameActual()).getWidth();
+        double posicionX = this.getPosicion().getX() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2* Constantes.ESCALADO_SPRITE)  - 2 * 8 * Constantes.ESCALADO_SPRITE;
+        double posicionY = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2* Constantes.ESCALADO_SPRITE) ;
 
 
-        // Sprite original del jugador, mirando hacia la derecha
-        if (getEstado() == EstadosFantasma.ATAQUE || getEstado() == EstadosFantasma.DISPERSION || getEstado() == EstadosFantasma.ESPERASPAWN || getEstado() == EstadosFantasma.ESPERASPAWNINICIAL)
-            sprite = getColorFantasma() + "_" + getDireccion() + "_" + getFrameActual();
-        else if (getEstado() == EstadosFantasma.HUIDA){
-            double tiempoRestante = Controlador.finHuidaFantasmas - Controlador.ahora();
-            if (tiempoRestante < 3500){
-                if (huidaSiguienteFrame == -1){
-                    huidaSiguienteFrame = Controlador.ahora() + 500;
-                }
-                if (Controlador.ahora() > huidaSiguienteFrame){
-                    if (ultimoFrame.contains("azul")){
-                        sprite = "huida_blanco_" + getFrameActual();
-                    } else {
-                        sprite = "huida_azul_" + getFrameActual();
+
+        switch(this.estado){
+            case MUERTO:
+                sprite = "ojos_" + getDireccion();
+            break;
+            case HUIDA:
+                double tiempoRestante = Controlador.finHuidaFantasmas - Controlador.ahora();
+                if (tiempoRestante < 3500){
+                    if (huidaSiguienteFrame == -1){
+                        huidaSiguienteFrame = Controlador.ahora() + 500;
                     }
-                    huidaSiguienteFrame = Controlador.ahora() + 300;
+                    if (Controlador.ahora() > huidaSiguienteFrame){
+                        if (ultimoFrame.contains("azul")){
+                            sprite = "huida_blanco_" + getFrameActual();
+                        } else {
+                            sprite = "huida_azul_" + getFrameActual();
+                        }
+                        huidaSiguienteFrame = Controlador.ahora() + 300;
+                    } else {
+                        sprite = ultimoFrame;
+                    }
                 } else {
-                    sprite = ultimoFrame;
+                    sprite = "huida_azul_" + getFrameActual();
                 }
+            break;
+            default:
+                sprite = getColorFantasma() + "_" + getDireccion() + "_" + getFrameActual();
+            break;
 
 
-
-
-            } else {
-                sprite = "huida_azul_" + getFrameActual();
-            }
         }
-        else if (getEstado() == EstadosFantasma.MUERTO)
-            sprite = "ojos_" + getDireccion();
 
-        ultimoFrame = sprite;
+
+        this.ultimoFrame = sprite;
         ImageView spriteJugador = new ImageView(getHojaSprites().getSpriteData().get(sprite));
 
 
@@ -352,26 +288,20 @@ public abstract class Fantasma extends Entidad {
         spriteFinal = Utilidades.aplicarTransparencia(spriteFinal);
 
         //gc.drawImage(getHojaSprites().getSpriteData().get("frame_1"), posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
-        gc.drawImage(spriteFinal, posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
-
-
-
+        gc.drawImage(spriteFinal, posicionX, posicionY, dimensionFantasma, dimensionFantasma);
     }
 
     public void cambiarEstado(EstadosFantasma nuevoEstado){
-        estadoAnterior = this.estado;
+        this.estadoAnterior = this.estado;
         this.estado = nuevoEstado;
+
         if (this.estado == EstadosFantasma.DISPERSION)
             this.objetivo = new Posicion(this.objetivoDispersion.getX(), this.objetivoDispersion.getY());
-        else if (this.estado == EstadosFantasma.MUERTO){
+        else if (this.estado == EstadosFantasma.MUERTO)
             this.objetivo = new Posicion(this.posicionSpawnOjos.getX(), this.posicionSpawnOjos.getY());
-        }
-        else if (this.estado == EstadosFantasma.ESPERASPAWN) {
-            if (this.objetivo == new Posicion(14, 17))
-                this.objetivo = new Posicion(15, 14);
-            else
+        else if (this.estado == EstadosFantasma.ESPERASPAWN)
                 this.objetivo = new Posicion(16, 14);
-        }
+
         String helper = getDireccion();
         setDireccion(direccionContraria);
         this.direccionContraria = helper;
@@ -381,21 +311,19 @@ public abstract class Fantasma extends Entidad {
 
     public void detectarColisionJugador(Jugador jugador){
         if (getPosicion().getX() == jugador.getPosicion().getX() && getPosicion().getY() == jugador.getPosicion().getY()){
-            if (this.estado == EstadosFantasma.HUIDA) {
+            if (this.estado == EstadosFantasma.HUIDA) { // Jugador come a fantasma
                 Controlador.controladorSonido.getJugadorComerFantasma().play();
                 cambiarEstado(EstadosFantasma.MUERTO);
+                Controlador.puntuacion += 4000;
             }
-            else if (this.estado == EstadosFantasma.ATAQUE || this.estado == EstadosFantasma.DISPERSION || this.estado == EstadosFantasma.ESPERASPAWN || this.estado == EstadosFantasma.ESPERASPAWNINICIAL){
+            else if (this.estado != EstadosFantasma.MUERTO){ // Si el fantasma puede matar
                 if (Controlador.jugador.isConVida() && !Controlador.perdido){
                     System.out.println("Jugador eliminado!");
                     Controlador.jugador.setConVida(false);
                     Controlador.momentoPerder = Controlador.ahora() + Constantes.COOLDOWN_MUERTE_JUGADOR;
-                    System.out.println(Controlador.momentoPerder);
-
                 }
             }
         }
-
     }
 
     @Override
