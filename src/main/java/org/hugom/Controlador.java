@@ -46,6 +46,9 @@ public class Controlador {
     public static boolean parpadeoBlanco;
     public static double siguienteParpadeo = -1;
 
+    public static boolean partidaFinalizada = false;
+    public static double momentoFinalizar = -1;
+    public static boolean partidaFinalizadaMostrado = false;
 
     public static ArrayList<Integer> vidasDadas = new ArrayList<>();
 
@@ -74,7 +77,7 @@ public class Controlador {
         listaFantasmas.put("azul", azul);
         listaFantasmas.put("naranja", naranja);
 
-        vidasJugador = 3;
+        vidasJugador = 0;
 
     }
     public static void tocarSonidosMuerteFantasma(){

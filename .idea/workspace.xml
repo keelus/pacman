@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Reduccion minima de codigo." />
+    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Reduccion minima de codigo.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,6 +64,8 @@
       <option name="presentableId" value="Default" />
       <updated>1682355159742</updated>
       <workItem from="1682355161598" duration="2731000" />
+      <workItem from="1682622347784" duration="34000" />
+      <workItem from="1682636060589" duration="3449000" />
     </task>
     <task id="LOCAL-00001" summary="Arreglado el error de path al cargar imagenes de Sprite">
       <created>1682356082981</created>
@@ -81,7 +88,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682622319607</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Reduccion minima de codigo.">
+      <created>1682622372032</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1682622372032</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

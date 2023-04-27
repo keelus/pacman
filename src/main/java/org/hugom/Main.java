@@ -1,28 +1,21 @@
 package org.hugom;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
-
-import java.io.File;
 import java.io.IOException;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import org.json.simple.parser.ParseException;
 import javafx.scene.text.*;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import javafx.scene.image.ImageView ;
+
 
 public class Main extends Application {
 
@@ -40,6 +33,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException, ParseException {
         primaryStage.setTitle("Pacman - por Hugo Moreda");
+        primaryStage.setResizable(false);
 
         Font fuente = Font.loadFont(getClass().getResourceAsStream("/media/tipografia/fuente.ttf"), Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
 
@@ -48,6 +42,17 @@ public class Main extends Application {
         textoPuntuacion.setFont(fuente);
         textoPuntuacion.setX(Constantes.ANCHOVENTANA/2 - textoPuntuacion.getLayoutBounds().getWidth() / 2 - 15);
         textoPuntuacion.setFill(Color.WHITE);
+
+        Text textoGameOver = new Text(0, 500, "GAME OVER");
+        textoGameOver.setFont(fuente);
+        textoGameOver.setX(Constantes.ANCHOVENTANA/2 - textoGameOver.getLayoutBounds().getWidth() / 2);
+        textoGameOver.setFill(Color.RED);
+
+        Text textoGameOver2 = new Text(0, 500, "[R]EINICIAR");
+        textoGameOver2.setFont(fuente);
+        textoGameOver2.setX(10);
+        textoGameOver2.setY(Constantes.ALTOVENTANA - 13);
+        textoGameOver2.setFill(Color.RED);
 
         Text textoReady = new Text(0, 500, "Ready!");
         textoReady.setFont(fuente);
@@ -68,7 +73,7 @@ public class Main extends Application {
         textoAutor.setFill(Color.WHITE);
 
 
-        Text textoControles = new Text(0, 400, "CONTROLES:\n\nWASD - MOVIMIENTO\nM - DES/ACTIVAR SONIDO\nESC - SALIR");
+        Text textoControles = new Text(0, 400, "CONTROLES:\n\nWASD - MOVIMIENTO\nR - REINICIAR\nESC - SALIR");
         textoControles.setTextAlignment(TextAlignment.CENTER);
         textoControles.setFont(fuente);
         textoControles.setX(Constantes.ANCHOVENTANA/2 - textoControles.getLayoutBounds().getWidth() / 2);
@@ -80,6 +85,7 @@ public class Main extends Application {
 
         Pane root = new Pane();
         Scene scene = new Scene(root, Constantes.ANCHOVENTANA, Constantes.ALTOVENTANA);
+        scene.setFill(Color.BLACK);
 
         Canvas canvas = new Canvas(scene.getWidth(), scene.getHeight());
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -91,6 +97,8 @@ public class Main extends Application {
         root.getChildren().add(canvas);
         root.getChildren().add(textoPuntuacion);
         root.getChildren().add(textoReady);
+        root.getChildren().add(textoGameOver);
+        root.getChildren().add(textoGameOver2);
         root.getChildren().add(textoPulsarBoton);
         root.getChildren().add(textoAutor);
         root.getChildren().add(textoControles);
@@ -98,11 +106,8 @@ public class Main extends Application {
 
 
 
-
-
         // Teclas
         scene.setOnKeyPressed(event -> {
-
             if(Controlador.juegoEnCurso && Controlador.jugador.isConVida()){
                 if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP) {
                     Controlador.jugador.actualizarDireccion("arr", true);
@@ -114,6 +119,15 @@ public class Main extends Application {
                     Controlador.jugador.actualizarDireccion("der", true);
                 }
             }
+            if (Controlador.ventanaActual == 0){
+                if (event.getCode() == KeyCode.ESCAPE)
+                    Platform.exit();
+                else Controlador.ventanaActual += 1;
+            }
+            if (Controlador.partidaFinalizadaMostrado)
+                if (event.getCode() == KeyCode.R)
+                    Controlador.ventanaActual = 0;
+            // ## TECLAS DEBUG
             if (event.getCode() == KeyCode.O){
                 Controlador.nivelActual++;
             } else if (event.getCode() == KeyCode.K){
@@ -138,10 +152,6 @@ public class Main extends Application {
                 if(Controlador.jugador.getFrameActual() == 13)
                     frame = 0;
                 Controlador.jugador.setFrameActual(frame);
-            } else if (event.getCode() == KeyCode.Q){
-                Controlador.ventanaActual -= 1;
-            } else if (event.getCode() == KeyCode.ENTER){
-                Controlador.ventanaActual += 1;
             }
         });
 
@@ -149,120 +159,126 @@ public class Main extends Application {
         AnimationTimer timer = new AnimationTimer(){
             @Override
             public void handle(long now) {
-                if (Controlador.ventanaActual == 0){
-                    gc.setFill(Color.BLACK);
-                    textoPuntuacion.setVisible(false);
-                    textoReady.setVisible(false);
-                    textoPulsarBoton.setVisible(true);
-                    textoAutor.setVisible(true);
-                    textoControles.setVisible(true);
-                    logo.setVisible(true);
-                    //gc.drawImage(spriteSheetOriginal, 50, 50, 20, 20);
-
-//                    WritableImage spriteFinal = new WritableImage((int)spriteJugador.getBoundsInLocal().getWidth(), (int)spriteJugador.getBoundsInLocal().getHeight());
-//                    spriteJugador.snapshot(null, spriteFinal);
-//
-//                    spriteFinal = Utilidades.aplicarTransparencia(spriteFinal);
-//
-//                    //gc.drawImage(getHojaSprites().getSpriteData().get("frame_1"), posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
-//                    gc.drawImage(spriteFinal, posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
-
-
-                    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                }
-                else if  (Controlador.ventanaActual == 1){
-                    textoPuntuacion.setVisible(true);
-                    textoReady.setVisible(true);
-                    textoPulsarBoton.setVisible(false);
-                    textoAutor.setVisible(false);
-                    textoControles.setVisible(false);
-                    logo.setVisible(false);
-
-
-                    if (!Controlador.juegoEnCurso) {
-                        textoReady.setText("Ready!");
-                        if (!Controlador.controladorSonido.getInicioJuego().isPlaying()){
-                            Controlador.controladorSonido.getInicioJuego().play();
-                            Controlador.iniciarJuego();
-                        }
-                        if (Controlador.ahora() > Controlador.juegoMomentoInicio) {
-                            Controlador.juegoEnCurso = true;
-                            textoReady.setText("");
-                        }
-                    }
-                    if (Controlador.perdido && !Controlador.jugador.isConVida()) {
-                        if (!Controlador.restadoPerdido) {
-                            if (Controlador.vidasJugador > 0) {
-                                Controlador.restadoPerdido = true;
-                                Controlador.juegoMomentoInicio = Controlador.ahora() + 2000;
-                            }
-                        }
-                        if (Controlador.ahora() > Controlador.juegoMomentoInicio) {
-                            Controlador.controladorSonido.getHuidaFantasmas().stop();
-                            Controlador.controladorSonido.getVueltaSpawnFantasma().stop();
-                            Controlador.jugador.setConVida(true);
-                            Controlador.perdido = false;
-                            Controlador.reiniciarPosiciones(0);
-                            Controlador.restadoPerdido = false;
-                            Controlador.vidasJugador -= 1;
-                        }
-                    }
-
-                    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                    Controlador.dibujarMapeado(gc);
-
-                    Controlador.jugador.dibujar(gc);
-
-                    if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
-                        Controlador.jugador.mover();
-
-
-                    Controlador.establecerObjetivosFantasmas();
-
-                    if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
-                        Controlador.moverFantasmas();
-
-                    Controlador.dibujarFantasmas(gc);
-                    Controlador.tocarSonidosMuerteFantasma();
-
-                    if (!Controlador.jugador.isConVida() && !Controlador.perdido) {
-                        if (Controlador.ahora() > Controlador.momentoPerder) {
-                            Controlador.perdido = true;
-                            Controlador.controladorSonido.getMuerteJugador().play();
-                        }
-                    }
-
-                    if (Controlador.ahora() > Controlador.momentoParpadeo && Controlador.nivelFinalizado && !Controlador.nivelParpadeando){
-                        Controlador.nivelParpadeando = true;
-                    }
-
-                    if (Controlador.nivelParpadeando){
-                        if (Controlador.ahora() > Controlador.siguienteParpadeo){
-                            if (Controlador.parpadeoBlanco){
-                                Controlador.parpadeoBlanco = false;
-                            } else Controlador.parpadeoBlanco = true;
-
-//                            System.out.println(Controlador.parpadeoBlanco);
-                            Controlador.siguienteParpadeo = Controlador.ahora() + 250;
-                        }
-                    }
-
-                    if (Controlador.ahora() > Controlador.momentoAvance && Controlador.nivelFinalizado){
-                        System.out.println("Avanzar!");
-                        Controlador.siguienteNivel();
-                    }
-
-
-
-
-                    textoPuntuacion.setTextAlignment(TextAlignment.RIGHT);
-                    textoPuntuacion.setText("HIGH SCORE\n" + Controlador.puntuacion + "  ");
-
-                    Controlador.dibujarVidas(gc);
-                    Controlador.dibujarNivel(gc);
-
-                }
+            if (Controlador.ventanaActual == 0){
+                gc.setFill(Color.BLACK);
+                textoPuntuacion.setVisible(false);
+                textoReady.setVisible(false);
+                textoGameOver.setVisible(false);
+                textoGameOver2.setVisible(false);
+                textoPulsarBoton.setVisible(true);
+                textoAutor.setVisible(true);
+                textoControles.setVisible(true);
+                logo.setVisible(true);
+                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
             }
+            else if  (Controlador.ventanaActual == 1){
+                textoPuntuacion.setVisible(true);
+                textoReady.setVisible(true);
+                textoPulsarBoton.setVisible(false);
+                textoAutor.setVisible(false);
+                textoControles.setVisible(false);
+                logo.setVisible(false);
+
+
+                // Juego no estara en curso cuando:
+                // - Antes de iniciar por primera vez la partida.
+                // - Cuando se pierda una vida, durante el cooldown.
+                if (!Controlador.juegoEnCurso) {
+                    textoReady.setText("Ready!");
+                    if (!Controlador.controladorSonido.getInicioJuego().isPlaying()){
+                        Controlador.controladorSonido.getInicioJuego().play();
+                        Controlador.iniciarJuego();
+                    }
+                    if (Controlador.ahora() > Controlador.juegoMomentoInicio) {
+                        Controlador.juegoEnCurso = true;
+                        textoReady.setText("");
+                    }
+                }
+
+                if (Controlador.perdido && !Controlador.jugador.isConVida() && !Controlador.partidaFinalizada) {
+                    // Restado perdido = Cooldown hasta que se reste la vida del jugador (animacion)
+                    if (!Controlador.restadoPerdido) {
+                        if (Controlador.vidasJugador > 0) { // Si sus vidas son mayores que 0, continuamos
+                            Controlador.restadoPerdido = true;
+                            Controlador.juegoMomentoInicio = Controlador.ahora() + 2000;
+                        } else { // Si sus vidas son 0 y pierde, fin de la partida
+                            Controlador.partidaFinalizada = true;
+                            Controlador.momentoFinalizar = Controlador.ahora() + 2000;
+                        }
+                    }
+                    // Cuando sea el momento de re-spawnear el jugador, restamos vida, reiniciamos posiciones, etc
+                    if (Controlador.ahora() > Controlador.juegoMomentoInicio && !Controlador.partidaFinalizada) {
+                        Controlador.controladorSonido.getHuidaFantasmas().stop();
+                        Controlador.controladorSonido.getVueltaSpawnFantasma().stop();
+                        Controlador.jugador.setConVida(true);
+                        Controlador.perdido = false;
+                        Controlador.reiniciarPosiciones(0);
+                        Controlador.restadoPerdido = false;
+                        Controlador.vidasJugador -= 1;
+                    }
+                }
+
+
+                // Si la partida ha acabado y es momento de mostrar el mensaje..
+                if (Controlador.ahora() > Controlador.momentoFinalizar && Controlador.partidaFinalizada && !Controlador.partidaFinalizadaMostrado){
+                    Controlador.partidaFinalizadaMostrado = true;
+                    textoGameOver.setVisible(true);
+                    textoGameOver2.setVisible(true);
+                }
+
+
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                Controlador.dibujarMapeado(gc);
+
+                Controlador.jugador.dibujar(gc);
+
+                if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
+                    Controlador.jugador.mover();
+
+
+                Controlador.establecerObjetivosFantasmas();
+
+                if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
+                    Controlador.moverFantasmas();
+
+                Controlador.dibujarFantasmas(gc);
+                Controlador.tocarSonidosMuerteFantasma();
+
+                if (!Controlador.jugador.isConVida() && !Controlador.perdido) {
+                    if (Controlador.ahora() > Controlador.momentoPerder) {
+                        Controlador.perdido = true;
+                        Controlador.controladorSonido.getMuerteJugador().play();
+                    }
+                }
+
+                if (Controlador.ahora() > Controlador.momentoParpadeo && Controlador.nivelFinalizado && !Controlador.nivelParpadeando){
+                    Controlador.nivelParpadeando = true;
+                }
+
+                if (Controlador.nivelParpadeando){
+                    if (Controlador.ahora() > Controlador.siguienteParpadeo){
+                        Controlador.parpadeoBlanco = !Controlador.parpadeoBlanco;
+                        Controlador.siguienteParpadeo = Controlador.ahora() + 250;
+                    }
+                }
+
+                if (Controlador.ahora() > Controlador.momentoAvance && Controlador.nivelFinalizado){
+                    Controlador.siguienteNivel();
+                }
+
+
+
+
+                textoPuntuacion.setTextAlignment(TextAlignment.RIGHT);
+                textoPuntuacion.setText("HIGH SCORE\n" + Controlador.puntuacion + "  ");
+
+                Controlador.dibujarVidas(gc);
+                Controlador.dibujarNivel(gc);
+            }
+            }
+
+
+
         };
 
         timer.start();
