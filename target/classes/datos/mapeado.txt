@@ -12,7 +12,7 @@ __y.jFFi.CD.jFFlkFFi.CD.jFFi.z__
 __y......CD....CD....CD......z__
 __dBBBBh.CnEEh_CD_gEEmD.gBBBBc__
 _______y.CkFFi_ji_jFFlD.z_______
-_______y.CD__------__CD.z_______
+_______y.CD__________CD.z_______
 _______y.CD_sBxGGwBt_CD.z_______
 AAAAAAAi.ji_z______y_ji.jAAAAAAA
 ________.___z______y___.________
@@ -24,7 +24,7 @@ __aAAAAi.ji_jFFlkFFi_ji.jAAAAb__
 __y............CD............z__
 __y.gEEh.gEEEh.CD.gEEEh.gEEh.z__
 __y.jFlD.jFFFi.ji.jFFFi.CkFi.z__
-__y:..CD.....++--++.....CD..:z__
+__y:..CD.......__.......CD..:z__
 __rEh.CD.gh.gEEEEEEh.gh.CD.gEq__
 __oFi.ji.CD.jFFlkFFi.CD.ji.jFp__
 __y......CD....CD....CD......z__
