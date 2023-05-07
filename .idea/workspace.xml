@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Reinicio de juego completado.">
+    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Reorganizado codigo vario.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Constantes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Constantes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +64,7 @@
       <workItem from="1682355161598" duration="2731000" />
       <workItem from="1682622347784" duration="34000" />
       <workItem from="1682636060589" duration="3589000" />
-      <workItem from="1683476618846" duration="2191000" />
+      <workItem from="1683476618846" duration="2221000" />
     </task>
     <task id="LOCAL-00001" summary="Arreglado el error de path al cargar imagenes de Sprite">
       <created>1682356082981</created>
@@ -114,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683477752287</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Reorganizado codigo vario.">
+      <created>1683478831050</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1683478831050</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -125,6 +126,7 @@
     <MESSAGE value="Reduccion minima de codigo." />
     <MESSAGE value="Pantalla de muerte.&#10;TODO: Reiniciar juego." />
     <MESSAGE value="Reinicio de juego completado." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reinicio de juego completado." />
+    <MESSAGE value="Reorganizado codigo vario." />
+    <option name="LAST_COMMIT_MESSAGE" value="Reorganizado codigo vario." />
   </component>
 </project>
