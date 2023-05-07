@@ -308,9 +308,34 @@ public class Controlador {
     }
 
     public static void iniciarJuego(){
+        System.out.println("INICIAR JUEGO LLAMADO");
         juegoMomentoInicio = ahora() + Constantes.COOLDOWN_INICIO_GAME;
         reiniciarPosiciones(Constantes.COOLDOWN_INICIO_GAME);
+    }
 
+    public static void reiniciarJuego(){
+        ventanaActual = 0;
+        juegoEnCurso = false;
+        jugador.setConVida(true);
+        cargar_estructura();
+        siguienteNivel();
+        nivelActual = 0;
+        puntuacion = 0;
+        vidasJugador = Constantes.VIDAS_INICIALES;
+        huidaFantasmas = false;
+        finHuidaFantasmas = -1;
+        momentoPerder = -1;
+        perdido = false;
+        restadoPerdido = false;
+        nivelFinalizado = false;
+        momentoParpadeo = -1;
+        momentoAvance = -1;
+        nivelParpadeando = false;
+        siguienteParpadeo = -1;
+        partidaFinalizada = false;
+        momentoFinalizar = -1;
+        partidaFinalizadaMostrado = false;
+        vidasDadas = new ArrayList<>();
 
     }
 

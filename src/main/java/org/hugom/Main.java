@@ -111,68 +111,37 @@ public class Main extends Application {
 
         // Teclas
         scene.setOnKeyPressed(event -> {
-            if(Controlador.juegoEnCurso && Controlador.jugador.isConVida()){
-                if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP) {
-                    Controlador.jugador.actualizarDireccion("arr", true);
-                } else if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
-                    Controlador.jugador.actualizarDireccion("izq", true);
-                } else if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) {
-                    Controlador.jugador.actualizarDireccion("abj", true);
-                } else if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
-                    Controlador.jugador.actualizarDireccion("der", true);
-                }
-            }
-            if (Controlador.ventanaActual == 0){
+
+            // MOVIMIENTO DEL JUGADOR
+            if(Controlador.juegoEnCurso && Controlador.jugador.isConVida())
+                if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP) Controlador.jugador.actualizarDireccion("arr", true);
+                else if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) Controlador.jugador.actualizarDireccion("izq", true);
+                else if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) Controlador.jugador.actualizarDireccion("abj", true);
+                else if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) Controlador.jugador.actualizarDireccion("der", true);
+
+
+            // TECLAS VARIAS
+            if (Controlador.ventanaActual == 0)
                 if (event.getCode() == KeyCode.ESCAPE)
                     Platform.exit();
                 else Controlador.ventanaActual += 1;
-            }
-            if (Controlador.partidaFinalizadaMostrado)
-                if (event.getCode() == KeyCode.R){
-                    Controlador.ventanaActual = 0;
 
-                    // Reiniciamos la mayoria de variables del Controlador, para que la partida empiece desde 0
-                    Controlador.juegoEnCurso = false;
-                    Controlador.reiniciarPosiciones(0);
-                    Controlador.jugador.setConVida(true);
-                    Controlador.cargar_estructura();
-                    Controlador.siguienteNivel();
-                    Controlador.nivelActual = 0;
-                    Controlador.puntuacion = 0;
-                    Controlador.vidasJugador = Constantes.VIDAS_INICIALES;
-                    Controlador.huidaFantasmas = false;
-                    Controlador.finHuidaFantasmas = -1;
-                    Controlador.momentoPerder = -1;
-                    Controlador.perdido = false;
-                    Controlador.restadoPerdido = false;
-                    Controlador.juegoEnCurso = false;
-                    Controlador.nivelFinalizado = false;
-                    Controlador.momentoParpadeo = -1;
-                    Controlador.momentoAvance = -1;
-                    Controlador.nivelParpadeando = false;
-                    Controlador.siguienteParpadeo = -1;
-                    Controlador.partidaFinalizada = false;
-                    Controlador.momentoFinalizar = -1;
-                    Controlador.partidaFinalizadaMostrado = false;
-                    Controlador.vidasDadas = new ArrayList<>();
+            if (Controlador.partidaFinalizadaMostrado && event.getCode() == KeyCode.R)
+                    Controlador.reiniciarJuego();
 
-                }
-            // ## TECLAS DEBUG
-            if (event.getCode() == KeyCode.O){
-                Controlador.nivelActual++;
-            } else if (event.getCode() == KeyCode.K){
-                Controlador.nivelActual--;
-            } else if (event.getCode() == KeyCode.DIGIT1){
-                Controlador.forzarHuidaFantasmas();
-            } else if (event.getCode() == KeyCode.DIGIT2){
-                Controlador.actualizarEstadosFantasmas(EstadosFantasma.DISPERSION);
-            } else if (event.getCode() == KeyCode.DIGIT3){
-                Controlador.actualizarEstadosFantasmas(EstadosFantasma.ATAQUE);
-            } else if (event.getCode() == KeyCode.DIGIT4){
-                Controlador.actualizarEstadosFantasmas(EstadosFantasma.MUERTO);
-            } else if (event.getCode() == KeyCode.DIGIT5){
-                Controlador.actualizarEstadosFantasmas(EstadosFantasma.ESPERASPAWN);
-            } else if (event.getCode() == KeyCode.DIGIT8){
+
+
+            // TECLAS DEBUG
+            if (event.getCode() == KeyCode.O) Controlador.nivelActual++;
+            else if (event.getCode() == KeyCode.K)Controlador.nivelActual--;
+
+            else if (event.getCode() == KeyCode.DIGIT1) Controlador.forzarHuidaFantasmas();
+            else if (event.getCode() == KeyCode.DIGIT2) Controlador.actualizarEstadosFantasmas(EstadosFantasma.DISPERSION);
+            else if (event.getCode() == KeyCode.DIGIT3) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ATAQUE);
+            else if (event.getCode() == KeyCode.DIGIT4) Controlador.actualizarEstadosFantasmas(EstadosFantasma.MUERTO);
+            else if (event.getCode() == KeyCode.DIGIT5) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ESPERASPAWN);
+
+            else if (event.getCode() == KeyCode.DIGIT8) {
                 int frame = Controlador.jugador.getFrameActual() - 1;
                 if(Controlador.jugador.getFrameActual() == 0)
                     frame = 13;
@@ -190,6 +159,7 @@ public class Main extends Application {
             @Override
             public void handle(long now) {
             if (Controlador.ventanaActual == 0){
+                // Elementos de interfaz
                 gc.setFill(Color.BLACK);
                 textoPuntuacion.setVisible(false);
                 textoReady.setVisible(false);
@@ -202,6 +172,7 @@ public class Main extends Application {
                 gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
             }
             else if  (Controlador.ventanaActual == 1){
+                // Elementos de interfaz
                 textoPuntuacion.setVisible(true);
                 textoReady.setVisible(true);
                 textoPulsarBoton.setVisible(false);
@@ -211,8 +182,9 @@ public class Main extends Application {
 
 
                 // Juego no estara en curso cuando:
-                // - Antes de iniciar por primera vez la partida.
-                // - Cuando se pierda una vida, durante el cooldown.
+                // 1) Antes de iniciar por primera vez la partida.
+                // 2) Cuando se pierda una vida, durante el cooldown.
+                // 3) Cuando se pierdan todas las vidas y pulse R, actuara como 1)
                 if (!Controlador.juegoEnCurso) {
                     textoReady.setText("Ready!");
                     if (!Controlador.controladorSonido.getInicioJuego().isPlaying()){
