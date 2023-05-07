@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Reduccion minima de codigo.">
+    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Pantalla de muerte.&#10;TODO: Reiniciar juego.">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_4_23_21_04_[Changes]/Constantes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_4_23_21_04_[Changes]/Controlador.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_4_23_21_04_[Changes]/ControladorSonido.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_4_23_21_04_[Changes]/Fantasma.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_4_23_21_04_[Changes]/Main$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_4_23_21_04_[Changes]/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_4_23_21_04_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_4_23_21_04__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +75,8 @@
       <updated>1682355159742</updated>
       <workItem from="1682355161598" duration="2731000" />
       <workItem from="1682622347784" duration="34000" />
-      <workItem from="1682636060589" duration="3449000" />
+      <workItem from="1682636060589" duration="3589000" />
+      <workItem from="1683476618846" duration="868000" />
     </task>
     <task id="LOCAL-00001" summary="Arreglado el error de path al cargar imagenes de Sprite">
       <created>1682356082981</created>
@@ -95,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682622372032</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Pantalla de muerte.&#10;TODO: Reiniciar juego.">
+      <created>1682639640967</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1682639640967</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -104,6 +122,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Arreglado el error de path al cargar imagenes de Sprite" />
     <MESSAGE value="Reduccion minima de codigo." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reduccion minima de codigo." />
+    <MESSAGE value="Pantalla de muerte.&#10;TODO: Reiniciar juego." />
+    <option name="LAST_COMMIT_MESSAGE" value="Pantalla de muerte.&#10;TODO: Reiniciar juego." />
   </component>
 </project>

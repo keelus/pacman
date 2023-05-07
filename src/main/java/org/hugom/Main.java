@@ -10,6 +10,9 @@ import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import org.json.simple.parser.ParseException;
@@ -125,8 +128,35 @@ public class Main extends Application {
                 else Controlador.ventanaActual += 1;
             }
             if (Controlador.partidaFinalizadaMostrado)
-                if (event.getCode() == KeyCode.R)
+                if (event.getCode() == KeyCode.R){
                     Controlador.ventanaActual = 0;
+
+                    // Reiniciamos la mayoria de variables del Controlador, para que la partida empiece desde 0
+                    Controlador.juegoEnCurso = false;
+                    Controlador.reiniciarPosiciones(0);
+                    Controlador.jugador.setConVida(true);
+                    Controlador.cargar_estructura();
+                    Controlador.siguienteNivel();
+                    Controlador.nivelActual = 0;
+                    Controlador.puntuacion = 0;
+                    Controlador.vidasJugador = Constantes.VIDAS_INICIALES;
+                    Controlador.huidaFantasmas = false;
+                    Controlador.finHuidaFantasmas = -1;
+                    Controlador.momentoPerder = -1;
+                    Controlador.perdido = false;
+                    Controlador.restadoPerdido = false;
+                    Controlador.juegoEnCurso = false;
+                    Controlador.nivelFinalizado = false;
+                    Controlador.momentoParpadeo = -1;
+                    Controlador.momentoAvance = -1;
+                    Controlador.nivelParpadeando = false;
+                    Controlador.siguienteParpadeo = -1;
+                    Controlador.partidaFinalizada = false;
+                    Controlador.momentoFinalizar = -1;
+                    Controlador.partidaFinalizadaMostrado = false;
+                    Controlador.vidasDadas = new ArrayList<>();
+
+                }
             // ## TECLAS DEBUG
             if (event.getCode() == KeyCode.O){
                 Controlador.nivelActual++;
