@@ -180,14 +180,6 @@ public class Controlador {
                 else
                     listaFantasmas.get(fantasma).establecerObjetivoAtaque(jugador, null);
             }
-//            if(listaFantasmas.get("rojo").estado == EstadosFantasma.ATAQUE)
-//                ((Rojo)listaFantasmas.get("rojo")).establecerObjetivoAtaque(jugador, null);
-//            if(listaFantasmas.get("rosa").estado == EstadosFantasma.ATAQUE)
-//                ((Rosa)listaFantasmas.get("rosa")).establecerObjetivoAtaque(jugador, null);
-//            if(listaFantasmas.get("azul").estado == EstadosFantasma.ATAQUE)
-//                ((Azul)listaFantasmas.get("azul")).establecerObjetivoAtaque(jugador, (Rojo)listaFantasmas.get("rojo")); // El fantasma azul es el unico que depende del antasma rojo para su propio movimiento
-//            if(listaFantasmas.get("naranja").estado == EstadosFantasma.ATAQUE)
-//                ((Naranja)listaFantasmas.get("naranja")).establecerObjetivoAtaque(jugador, null);
         }
     }
     public static void forzarHuidaFantasmas(){
