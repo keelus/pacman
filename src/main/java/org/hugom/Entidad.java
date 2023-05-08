@@ -1,15 +1,18 @@
 package org.hugom;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
 
 
 public abstract class Entidad {
     private Posicion posicion;
     private String direccion;
     private HojaSprites hojaSprites;
-    private long siguienteFrame;
-    private int frameActual;
-    private long siguienteMovimiento;
+    private long siguienteFrame = 0;
+    private int frameActual = 0;
+    private long siguienteMovimiento = 0;
     private Color colorDebug;
 
     abstract void dibujar(GraphicsContext gc);
@@ -83,16 +86,14 @@ public abstract class Entidad {
         this.colorDebug = colorDebug;
     }
 
-    public Entidad() {
-    }
+    public Entidad(Posicion posicion, String direccion, Color colorDebug) throws IOException, ParseException {
+        if (this instanceof Jugador)
+            hojaSprites = new HojaSprites("/media/imagen/jugador3.png", "/datos/indicesSprites/spritesJugador.json");
+        else
+            hojaSprites = new HojaSprites("/media/imagen/fantasma.png", "/datos/indicesSprites/spritesFantasmas.json");
 
-    public Entidad(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, Color colorDebug) {
         this.posicion = posicion;
         this.direccion = direccion;
-        this.hojaSprites = hojaSprites;
-        this.siguienteFrame = siguienteFrame;
-        this.frameActual = frameActual;
-        this.siguienteMovimiento = siguienteMovimiento;
         this.colorDebug = colorDebug;
     }
 

@@ -8,49 +8,50 @@ import java.util.*;
 
 public class Controlador {
     private static Controlador singletonControlador = null;
-
     public static void setSingletonControlador(Controlador singletonControlador) {
         Controlador.singletonControlador = singletonControlador;
     }
+
+    public static ControladorSonido controladorSonido = new ControladorSonido();
+
+    public static int ventanaActual = 0;
+
+    public static HashMap<String, Fantasma> listaFantasmas = new HashMap<>();
+    public static Jugador jugador;
 
     static ArrayList<ArrayList<String>> estructuraVisualMapa;
     static ArrayList<ArrayList<String>> estructuraFuncionalMapa;
 
     static HojaSprites hojaSprites;
     static HojaSprites hojaSprites_blanca;
-    static HojaSprites hojaSpritesNivel;
+    static HojaSprites hojaSpritesContadorNivel;
 
-    public static int nivelActual;
-    public static int puntuacion;
-    public static int vidasJugador;
-
-    public static Boolean huidaFantasmas = false;
-    public static long finHuidaFantasmas;
-
-    public static ControladorSonido controladorSonido;
-
-    public static HashMap<String, Fantasma> listaFantasmas = new HashMap<>();
-    public static Jugador jugador;
-    public static double momentoPerder = -1;
-    public static Boolean perdido = false;
-    public static Boolean restadoPerdido = false;
+    public static int nivelActual = 0;
+    public static int puntuacion = 0;
 
     public static Boolean juegoEnCurso = false;
     public static double juegoMomentoInicio = ahora() + Constantes.COOLDOWN_INICIO_GAME;
 
-    public static int ventanaActual = 0;
+    public static Boolean perdido = false;
+    public static Boolean restadoPerdido = false;
+
     public static boolean nivelFinalizado = false;
     public static double momentoParpadeo = -1;
-    public static double momentoAvance = -1;
     public static boolean nivelParpadeando = false;
-    public static boolean parpadeoBlanco;
+    public static boolean parpadeoBlanco = false;
     public static double siguienteParpadeo = -1;
 
     public static boolean partidaFinalizada = false;
-    public static double momentoFinalizar = -1;
     public static boolean partidaFinalizadaMostrado = false;
 
+
+    public static Boolean huidaFantasmas = false;
+    public static long finHuidaFantasmas = 0;
+
     public static ArrayList<Integer> vidasDadas = new ArrayList<>();
+
+    public static String esperaRazon = "null";
+    public static double esperaMomento = -1;
 
 
 
@@ -59,26 +60,22 @@ public class Controlador {
         estructuraVisualMapa = estructurasCargadas.get(0);
         estructuraFuncionalMapa = estructurasCargadas.get(1);
 
-        hojaSpritesNivel = new HojaSprites("/media/imagen/frutas.png", "/datos/indicesSprites/spritesFrutas.json");
+        // Cargamos los sprites del mapa (Estructuras, estructuras en blanco [animacion avance de nivel] y frutas para indicar el nivel actual)
         hojaSprites = new HojaSprites("/media/imagen/spritesheet.png", "/datos/indicesSprites/spritesMapa.json");
         hojaSprites_blanca = new HojaSprites("/media/imagen/spritesheet_blanco.png", "/datos/indicesSprites/spritesMapa.json");
+        hojaSpritesContadorNivel = new HojaSprites("/media/imagen/frutas.png", "/datos/indicesSprites/spritesFrutas.json");
 
-        puntuacion = 0;
-        finHuidaFantasmas = ahora();
-        controladorSonido = new ControladorSonido();
 
-        jugador = new Jugador(new Posicion(16, 26), "der", new HojaSprites("/media/imagen/jugador3.png", "/datos/indicesSprites/spritesJugador.json"), 0, 0, 0, 0, 0);
-        Rojo rojo       = new Rojo(new Posicion(16, 14), "izq", new HojaSprites("/media/imagen/fantasma.png", "/datos/indicesSprites/spritesFantasmas.json"), 0, 0, 0,  new Posicion(10, 0), EstadosFantasma.ATAQUE, new Posicion(27, -1), new Posicion(14, 17));
-        Rosa rosa       = new Rosa(new Posicion(15, 17), "abj", new HojaSprites("/media/imagen/fantasma.png", "/datos/indicesSprites/spritesFantasmas.json"), 0, 0, 0, new Posicion(29, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(4, -1), new Posicion(14, 17));
-        Azul azul       = new Azul(new Posicion(14, 17), "arr", new HojaSprites("/media/imagen/fantasma.png", "/datos/indicesSprites/spritesFantasmas.json"), 0, 0, 0, new Posicion(10, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(29, 34), new Posicion(14, 17));
-        Naranja naranja = new Naranja(new Posicion(17, 17), "arr", new HojaSprites("/media/imagen/fantasma.png", "/datos/indicesSprites/spritesFantasmas.json"), 0, 0, 0, new Posicion(29, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(2, 34), new Posicion(14, 17));
+        jugador         = new Jugador(Constantes.POS_JUGADOR,   "der");
+        Rojo rojo       = new Rojo(Constantes.POS_ROJO,         "izq", new Posicion(10, 0), EstadosFantasma.ATAQUE, new Posicion(27, -1));
+        Rosa rosa       = new Rosa(Constantes.POS_ROSA,         "abj",  new Posicion(29, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(4, -1));
+        Azul azul       = new Azul(Constantes.POS_AZUL,         "arr",   new Posicion(10, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(29, 34));
+        Naranja naranja = new Naranja(Constantes.POS_NARANJA,   "arr",  new Posicion(29, 0), EstadosFantasma.ESPERASPAWNINICIAL, new Posicion(2, 34));
+
         listaFantasmas.put("rojo", rojo);
         listaFantasmas.put("rosa", rosa);
         listaFantasmas.put("azul", azul);
         listaFantasmas.put("naranja", naranja);
-
-        vidasJugador = 0;
-
     }
     public static void tocarSonidosMuerteFantasma(){
         boolean algunFantasmaMuerto = false;
@@ -127,10 +124,6 @@ public class Controlador {
         reiniciarPosiciones(2000);
         juegoEnCurso = false;
         juegoMomentoInicio = ahora() + 2000;
-
-
-
-
     }
 
     public static void reiniciarPosiciones(double miliSegundosExtra){
@@ -283,7 +276,7 @@ public class Controlador {
 
         for(int i = 0; i < sprites.size(); i++){
             if(sprites.get(i) != null){
-                Image imagen = hojaSpritesNivel.getSpriteData().get(sprites.get(i));
+                Image imagen = hojaSpritesContadorNivel.getSpriteData().get(sprites.get(i));
                 gc.drawImage(imagen, (posX + (i * 2)) * 8 * Constantes.ESCALADO_SPRITE - 2 * 8 * Constantes.ESCALADO_SPRITE, posY * 8 * Constantes.ESCALADO_SPRITE, imagen.getWidth(), imagen.getHeight());
             }
         }
@@ -293,7 +286,7 @@ public class Controlador {
         int posX = 4;
         int posY = 34;
 
-        for (int i=0; i < vidasJugador; i++){
+        for (int i=0; i < jugador.getVidasRestantes(); i++){
             Image imagen = jugador.getHojaSprites().getSpriteData().get("frame_1");
             gc.drawImage(imagen, (posX + (i * 2)) * 8 * Constantes.ESCALADO_SPRITE - 2 * 8 * Constantes.ESCALADO_SPRITE, posY * 8 * Constantes.ESCALADO_SPRITE, imagen.getWidth(), imagen.getHeight());
         }
@@ -313,21 +306,23 @@ public class Controlador {
         siguienteNivel();
         nivelActual = 0;
         puntuacion = 0;
-        vidasJugador = Constantes.VIDAS_INICIALES;
+        jugador.setVidasRestantes(Constantes.VIDAS_INICIALES);
         huidaFantasmas = false;
         finHuidaFantasmas = -1;
-        momentoPerder = -1;
+//        momentoPerder = -1;
         perdido = false;
         restadoPerdido = false;
         nivelFinalizado = false;
         momentoParpadeo = -1;
-        momentoAvance = -1;
+//        momentoAvance = -1;
         nivelParpadeando = false;
         siguienteParpadeo = -1;
         partidaFinalizada = false;
-        momentoFinalizar = -1;
+//        momentoFinalizar = -1;
         partidaFinalizadaMostrado = false;
         vidasDadas = new ArrayList<>();
+        esperaMomento = -1;
+        esperaRazon = "null";
 
     }
 

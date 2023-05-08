@@ -1,9 +1,12 @@
 package org.hugom;
 import javafx.scene.paint.Color;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
 
 public class Rosa extends Fantasma{
-    public Rosa(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, Posicion objetivo, EstadosFantasma estado, Posicion objetivoDispersion, Posicion posicionSpawnOjos) {
-        super(posicion, direccion, hojaSprites, siguienteFrame, frameActual, siguienteMovimiento, Color.PINK, objetivo, estado, objetivoDispersion, posicionSpawnOjos, "rosa", 7.0);
+    public Rosa(Posicion posicion, String direccion, Posicion objetivo, EstadosFantasma estado, Posicion objetivoDispersion) throws IOException, ParseException {
+        super(posicion, direccion, Color.PINK, objetivo, estado, objetivoDispersion, "rosa", 7.0);
     }
 
 

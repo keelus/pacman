@@ -3,7 +3,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.*;
 
 public abstract class Fantasma extends Entidad {
@@ -47,8 +49,8 @@ public abstract class Fantasma extends Entidad {
     /* Fin setters y getters */
 
 
-    public Fantasma(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, Color colorDebug, Posicion objetivo, EstadosFantasma estado, Posicion objetivoDispersion, Posicion posicionSpawnOjos, String colorFantasma, double esperaSpawnInicial) {
-        super(posicion, direccion, hojaSprites, siguienteFrame, frameActual, siguienteMovimiento, colorDebug);
+    public Fantasma(Posicion posicion, String direccion , Color colorDebug, Posicion objetivo, EstadosFantasma estado, Posicion objetivoDispersion, String colorFantasma, double esperaSpawnInicial) throws IOException, ParseException {
+        super(posicion, direccion, colorDebug);
         this.objetivo = objetivo;
         switch (direccion) {
             case "izq": this.direccionContraria = "der"; break;
@@ -58,7 +60,7 @@ public abstract class Fantasma extends Entidad {
         }
         this.estado = estado;
         this.objetivoDispersion = objetivoDispersion;
-        this.posicionSpawnOjos = posicionSpawnOjos;
+        this.posicionSpawnOjos = new Posicion(14, 17); // Ubicacion donde iran los ojos, una vez el fantasma muera
         this.colorFantasma = colorFantasma;
         this.esperaSpawnInicial = esperaSpawnInicial;
         if(!colorFantasma.equals("rojo"))
@@ -69,19 +71,13 @@ public abstract class Fantasma extends Entidad {
     public void mover() {
         String direccion = null;
 
-
-
-        if (getEstado() != EstadosFantasma.HUIDA){
-            direccion = calcularDistancias();
-        }
-
         if(Controlador.ahora() < getSiguienteMovimiento()){
             if(Controlador.ahora() > getSiguienteFrame()){
                 if(getFrameActual() == 1)
                     setFrameActual(0);
                 else setFrameActual(1);
 
-                setSiguienteFrame(Controlador.ahora() + 100);
+                setSiguienteFrame(Controlador.ahora() + Constantes.COOLDOWN_FRAME);
             }
             return;
         }
@@ -101,7 +97,7 @@ public abstract class Fantasma extends Entidad {
             ArrayList<String> soloValidas = new ArrayList<>();
 
             for (String posicion : posicionesValidas().keySet()) {
-                if (posicionesValidas().get(posicion) == false)
+                if (!posicionesValidas().get(posicion))
                     continue;
                 soloValidas.add(posicion);
             }
@@ -109,7 +105,8 @@ public abstract class Fantasma extends Entidad {
             String direccionAleatoria = soloValidas.get(aleatorio);
             setDireccion(direccionAleatoria);
             direccion = direccionAleatoria;
-
+        } else {
+            direccion = calcularDistancias();
         }
 
 
@@ -131,22 +128,23 @@ public abstract class Fantasma extends Entidad {
                 getPosicion().setY(getPosicion().getY()+1);
             break;
         }
-        if (getPosicion().getX() == 32)
-            getPosicion().setX(0);
-        else if (getPosicion().getX() == -1)
-            getPosicion().setX(31);
+        if (getPosicion().getX() == 32) getPosicion().setX(0);
+        else if (getPosicion().getX() == -1) getPosicion().setX(31);
 
         if (getPosicion().getX() == this.objetivo.getX() && getPosicion().getY() == this.objetivo.getY()){
-            if(this.estado == EstadosFantasma.MUERTO){
-                System.out.println("Fantasma ha llegado al spawn.");
-                    this.cambiarEstado(EstadosFantasma.ESPERASPAWN);
-            } else if (this.estado == EstadosFantasma.ESPERASPAWN){
-                System.out.println("Fantasma ha salido del spawn.");
-                    this.cambiarEstado(EstadosFantasma.ATAQUE);
-            }
+            // Si llega a su objetivo y esta muerto o a la espera de spawnear:
+            if(this.estado == EstadosFantasma.MUERTO) this.cambiarEstado(EstadosFantasma.ESPERASPAWN);          // Ya habra llegado al spawn
+            else if (this.estado == EstadosFantasma.ESPERASPAWN) this.cambiarEstado(EstadosFantasma.ATAQUE);    // Ya habra salido del spawn
         }
     }
 
+    /**
+     * Funcion que devuelve las posiciones a las que puede moverse un fantasma desde la posicion en la que esta, en las 4 direcciones.
+     * Un fantasma nunca podra moverse a:
+     *    - Una posicion en la que haya estructura (pared)
+     *    - Atras suyo (vuelta de 180º solo permitida al cambiar de estado)
+     * @return HashMap que contiene las posiciones a las que puede moverse.
+     */
     public HashMap<String, Boolean> posicionesValidas(){
         HashMap<String, Boolean> direcciones = new HashMap<String, Boolean>(){{
             put("arr", true);
@@ -161,13 +159,10 @@ public abstract class Fantasma extends Entidad {
             Posicion posicion = posicionEnDireccion(getPosicion(), direccion);
 
             // Evitamos que salga del mapeado
-            if (posicion.getX() == 32)
-                posicion.setX(0);
-            else if (posicion.getX() == -1)
-                posicion.setX(31);
+            if (posicion.getX() == 32) posicion.setX(0);
+            else if (posicion.getX() == -1) posicion.setX(31);
 
-            if (direccion.equals(getDireccionContraria()))
-                direcciones.replace(direccion, false);
+            if (direccion.equals(getDireccionContraria())) direcciones.replace(direccion, false);
             else {
                 if(Controlador.estructuraFuncionalMapa.get(posicion.getY()).get(posicion.getX()).equals("#"))
                     direcciones.replace(direccion, false);
@@ -180,6 +175,12 @@ public abstract class Fantasma extends Entidad {
         return direcciones;
     }
 
+
+    /**
+     * Funcion que, una vez conseguidas las posiciones validas a las que puede moverse el fantasma, calcula mediante el teorema de pitagoras la distancia exacta desde la posicion desde
+     * esa direccion hasta el fantasma, y devuelve la menor de ellas.
+     * @return devuelve la direccion a la que va a moverse el fantasma (la menor)
+     */
     public String calcularDistancias(){
         HashMap<String, Boolean> direccionesValidas = posicionesValidas();
         HashMap<String, Double> direccionesValores = new HashMap<>();
@@ -234,6 +235,16 @@ public abstract class Fantasma extends Entidad {
     }
 
 
+
+    /**
+     * La funcion dibuja el fantasma sobre el GraphicsContext. El sprite que dibujara sera dependiendo el color del fantasma, y el estado en el que este:<br>
+     * <ul>
+     * <li> En modo muerto: {@code "ojos_" + la direccion a la que mira}</li>
+     * <li> En modo huida: {@code "huida_" + color azul o blanco, dependiendo si debe de parpadear o no + "_" + el frame actual}</li>
+     * <li> En el resto: {@code color del fantasma + "_" + la direccion a la que mira + "_" + el frame actual}</li>
+     * </ul>
+     * @param gc GraphicsContext del Main sobre el que dibujar
+     */
     @Override
     void dibujar(GraphicsContext gc) {
         calcularDistancias();
@@ -291,6 +302,13 @@ public abstract class Fantasma extends Entidad {
         gc.drawImage(spriteFinal, posicionX, posicionY, dimensionFantasma, dimensionFantasma);
     }
 
+    /**
+     * Funcion que se encarga de que cada fantasma cambie de estado correctamente, haciendo los cambios necesarios en cada estado, si es necesario:
+     *   - Si cambia a modo {@link EstadosFantasma#DISPERSION}, el fantasma ira a una esquina de la pantalla. TODO
+     *   - Si cambia a modo {@link EstadosFantasma#MUERTO}, el fantasma tendra de objetivo regresar al spawn.
+     *   - Si cambia a modo {@link EstadosFantasma#ESPERASPAWN}, significa que el fantasma muerto ya llego al spawn, y su objetivo es salir de este.
+     * @param nuevoEstado el estado al que se va a cambiar el fantasma
+     */
     public void cambiarEstado(EstadosFantasma nuevoEstado){
         this.estadoAnterior = this.estado;
         this.estado = nuevoEstado;
@@ -320,7 +338,9 @@ public abstract class Fantasma extends Entidad {
                 if (Controlador.jugador.isConVida() && !Controlador.perdido){
                     System.out.println("Jugador eliminado!");
                     Controlador.jugador.setConVida(false);
-                    Controlador.momentoPerder = Controlador.ahora() + Constantes.COOLDOWN_MUERTE_JUGADOR;
+
+                    Controlador.esperaRazon = "perdido";
+                    Controlador.esperaMomento = Controlador.ahora() + Constantes.COOLDOWN_MUERTE_JUGADOR;
                 }
             }
         }

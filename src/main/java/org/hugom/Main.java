@@ -10,9 +10,6 @@ import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import org.json.simple.parser.ParseException;
@@ -29,9 +26,8 @@ public class Main extends Application {
     ImageView logo = new ImageView(logoSource);
 
 
-    public Main() throws IOException, ParseException {
-    }
 
+    public Main()  {}
 
     @Override
     public void start(Stage primaryStage) throws IOException, ParseException {
@@ -158,129 +154,132 @@ public class Main extends Application {
         AnimationTimer timer = new AnimationTimer(){
             @Override
             public void handle(long now) {
-            if (Controlador.ventanaActual == 0){
-                // Elementos de interfaz
-                gc.setFill(Color.BLACK);
-                textoPuntuacion.setVisible(false);
-                textoReady.setVisible(false);
-                textoGameOver.setVisible(false);
-                textoGameOver2.setVisible(false);
-                textoPulsarBoton.setVisible(true);
-                textoAutor.setVisible(true);
-                textoControles.setVisible(true);
-                logo.setVisible(true);
-                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            }
-            else if  (Controlador.ventanaActual == 1){
-                // Elementos de interfaz
-                textoPuntuacion.setVisible(true);
-                textoReady.setVisible(true);
-                textoPulsarBoton.setVisible(false);
-                textoAutor.setVisible(false);
-                textoControles.setVisible(false);
-                logo.setVisible(false);
-
-
-                // Juego no estara en curso cuando:
-                // 1) Antes de iniciar por primera vez la partida.
-                // 2) Cuando se pierda una vida, durante el cooldown.
-                // 3) Cuando se pierdan todas las vidas y pulse R, actuara como 1)
-                if (!Controlador.juegoEnCurso) {
-                    textoReady.setText("Ready!");
-                    if (!Controlador.controladorSonido.getInicioJuego().isPlaying()){
-                        Controlador.controladorSonido.getInicioJuego().play();
-                        Controlador.iniciarJuego();
-                    }
-                    if (Controlador.ahora() > Controlador.juegoMomentoInicio) {
-                        Controlador.juegoEnCurso = true;
-                        textoReady.setText("");
-                    }
+                if (Controlador.ventanaActual == 0){
+                    // Elementos de interfaz
+                    gc.setFill(Color.BLACK);
+                    textoPuntuacion.setVisible(false);
+                    textoReady.setVisible(false);
+                    textoGameOver.setVisible(false);
+                    textoGameOver2.setVisible(false);
+                    textoPulsarBoton.setVisible(true);
+                    textoAutor.setVisible(true);
+                    textoControles.setVisible(true);
+                    logo.setVisible(true);
+                    gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 }
+                else if  (Controlador.ventanaActual == 1){
+                    // Elementos de interfaz
+                    textoPuntuacion.setVisible(true);
+                    textoReady.setVisible(true);
+                    textoPulsarBoton.setVisible(false);
+                    textoAutor.setVisible(false);
+                    textoControles.setVisible(false);
+                    logo.setVisible(false);
 
-                if (Controlador.perdido && !Controlador.jugador.isConVida() && !Controlador.partidaFinalizada) {
-                    // Restado perdido = Cooldown hasta que se reste la vida del jugador (animacion)
-                    if (!Controlador.restadoPerdido) {
-                        if (Controlador.vidasJugador > 0) { // Si sus vidas son mayores que 0, continuamos
-                            Controlador.restadoPerdido = true;
-                            Controlador.juegoMomentoInicio = Controlador.ahora() + 2000;
-                        } else { // Si sus vidas son 0 y pierde, fin de la partida
-                            Controlador.partidaFinalizada = true;
-                            Controlador.momentoFinalizar = Controlador.ahora() + 2000;
+
+
+                    // Juego no estara en curso cuando:
+                    // 1) Antes de iniciar por primera vez la partida.
+                    // 2) Cuando se pierda una vida, durante el cooldown.
+                    // 3) Cuando se pierdan todas las vidas y pulse R, actuara como 1)
+                    if (!Controlador.juegoEnCurso) {
+                        textoReady.setText("Ready!");
+                        if (!Controlador.controladorSonido.getInicioJuego().isPlaying()){
+                            Controlador.controladorSonido.getInicioJuego().play();
+                            Controlador.iniciarJuego();
+                        }
+                        if (Controlador.ahora() > Controlador.juegoMomentoInicio) {
+                            Controlador.juegoEnCurso = true;
+                            textoReady.setText("");
                         }
                     }
-                    // Cuando sea el momento de re-spawnear el jugador, restamos vida, reiniciamos posiciones, etc
-                    if (Controlador.ahora() > Controlador.juegoMomentoInicio && !Controlador.partidaFinalizada) {
-                        Controlador.controladorSonido.getHuidaFantasmas().stop();
-                        Controlador.controladorSonido.getVueltaSpawnFantasma().stop();
-                        Controlador.jugador.setConVida(true);
-                        Controlador.perdido = false;
-                        Controlador.reiniciarPosiciones(0);
-                        Controlador.restadoPerdido = false;
-                        Controlador.vidasJugador -= 1;
+
+                    if (Controlador.perdido && !Controlador.jugador.isConVida() && !Controlador.partidaFinalizada) {
+                        // Restado perdido = Cooldown hasta que se reste la vida del jugador (animacion)
+                        if (!Controlador.restadoPerdido) {
+                            if (Controlador.jugador.getVidasRestantes() > 0) { // Si sus vidas son mayores que 0, continuamos
+                                Controlador.restadoPerdido = true;
+                                Controlador.juegoMomentoInicio = Controlador.ahora() + 2000;
+                            } else { // Si sus vidas son 0 y pierde, fin de la partida
+                                Controlador.partidaFinalizada = true;
+
+
+                                Controlador.esperaRazon = "finalizar";
+                                Controlador.esperaMomento = Controlador.ahora() + 2000;
+                            }
+                        }
+                        // Cuando sea el momento de re-spawnear el jugador, restamos vida, reiniciamos posiciones, etc
+                        if (Controlador.ahora() > Controlador.juegoMomentoInicio && !Controlador.partidaFinalizada) {
+                            Controlador.controladorSonido.getHuidaFantasmas().stop();
+                            Controlador.controladorSonido.getVueltaSpawnFantasma().stop();
+                            Controlador.jugador.setConVida(true);
+                            Controlador.perdido = false;
+                            Controlador.reiniciarPosiciones(0);
+                            Controlador.restadoPerdido = false;
+                            Controlador.jugador.setVidasRestantes(Controlador.jugador.getVidasRestantes() - 1); // Restamos 1 vida
+                        }
                     }
-                }
 
-
-                // Si la partida ha acabado y es momento de mostrar el mensaje..
-                if (Controlador.ahora() > Controlador.momentoFinalizar && Controlador.partidaFinalizada && !Controlador.partidaFinalizadaMostrado){
-                    Controlador.partidaFinalizadaMostrado = true;
-                    textoGameOver.setVisible(true);
-                    textoGameOver2.setVisible(true);
-                }
-
-
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                Controlador.dibujarMapeado(gc);
-
-                Controlador.jugador.dibujar(gc);
-
-                if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
-                    Controlador.jugador.mover();
-
-
-                Controlador.establecerObjetivosFantasmas();
-
-                if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
-                    Controlador.moverFantasmas();
-
-                Controlador.dibujarFantasmas(gc);
-                Controlador.tocarSonidosMuerteFantasma();
-
-                if (!Controlador.jugador.isConVida() && !Controlador.perdido) {
-                    if (Controlador.ahora() > Controlador.momentoPerder) {
-                        Controlador.perdido = true;
-                        Controlador.controladorSonido.getMuerteJugador().play();
+                    switch (Controlador.esperaRazon) {
+                        case "finalizar":
+                            if (!Controlador.partidaFinalizadaMostrado)
+                                if (Controlador.ahora() > Controlador.esperaMomento) {
+                                    Controlador.partidaFinalizadaMostrado = true;
+                                    textoGameOver.setVisible(true);
+                                    textoGameOver2.setVisible(true);
+                                }
+                            break;
+                        case "perdido":
+                            if (!Controlador.jugador.isConVida() && !Controlador.perdido)
+                                if (Controlador.ahora() > Controlador.esperaMomento) {
+                                    Controlador.perdido = true;
+                                    Controlador.controladorSonido.getMuerteJugador().play();
+                                }
+                            break;
+                        case "avance":
+                            if (Controlador.nivelFinalizado)
+                                if (Controlador.ahora() > Controlador.esperaMomento)
+                                    Controlador.siguienteNivel();
+                            break;
                     }
-                }
 
-                if (Controlador.ahora() > Controlador.momentoParpadeo && Controlador.nivelFinalizado && !Controlador.nivelParpadeando){
-                    Controlador.nivelParpadeando = true;
-                }
 
-                if (Controlador.nivelParpadeando){
-                    if (Controlador.ahora() > Controlador.siguienteParpadeo){
-                        Controlador.parpadeoBlanco = !Controlador.parpadeoBlanco;
-                        Controlador.siguienteParpadeo = Controlador.ahora() + 250;
+                    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                    Controlador.dibujarMapeado(gc);
+
+                    Controlador.jugador.dibujar(gc);
+
+                    if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
+                        Controlador.jugador.mover();
+
+
+                    Controlador.establecerObjetivosFantasmas();
+
+                    if (Controlador.juegoEnCurso && Controlador.jugador.isConVida() && !Controlador.nivelFinalizado)
+                        Controlador.moverFantasmas();
+
+                    Controlador.dibujarFantasmas(gc);
+                    Controlador.tocarSonidosMuerteFantasma();
+
+
+                    if (Controlador.ahora() > Controlador.momentoParpadeo && Controlador.nivelFinalizado && !Controlador.nivelParpadeando){
+                        Controlador.nivelParpadeando = true;
                     }
+
+                    if (Controlador.nivelParpadeando){
+                        if (Controlador.ahora() > Controlador.siguienteParpadeo){
+                            Controlador.parpadeoBlanco = !Controlador.parpadeoBlanco;
+                            Controlador.siguienteParpadeo = Controlador.ahora() + 250;
+                        }
+                    }
+
+                    textoPuntuacion.setTextAlignment(TextAlignment.RIGHT);
+                    textoPuntuacion.setText("HIGH SCORE\n" + Controlador.puntuacion + "  ");
+
+                    Controlador.dibujarVidas(gc);
+                    Controlador.dibujarNivel(gc);
                 }
-
-                if (Controlador.ahora() > Controlador.momentoAvance && Controlador.nivelFinalizado){
-                    Controlador.siguienteNivel();
-                }
-
-
-
-
-                textoPuntuacion.setTextAlignment(TextAlignment.RIGHT);
-                textoPuntuacion.setText("HIGH SCORE\n" + Controlador.puntuacion + "  ");
-
-                Controlador.dibujarVidas(gc);
-                Controlador.dibujarNivel(gc);
             }
-            }
-
-
-
         };
 
         timer.start();

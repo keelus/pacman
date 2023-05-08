@@ -2,25 +2,29 @@ package org.hugom;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.json.simple.parser.ParseException;
 
 public class Jugador extends Entidad {
-    boolean intentandoNuevaDireccion;
-    String intentandoNuevaDireccionDir;
-    int intentandoNuevaDireccionRestantes;
+    private boolean intentandoNuevaDireccion;
+    private String intentandoNuevaDireccionDir;
+    private int intentandoNuevaDireccionRestantes;
 
-    long siguienteWaka;
+    private long siguienteWaka;
 
-    boolean conVida = true;
-    boolean animacionMuerteEmpezada = false;
-    double animacionMuerteInicio = -1;
-    boolean animacionMuerteFinalizada = false;
+    private boolean conVida = true;
+    private boolean animacionMuerteEmpezada = false;
+    private double animacionMuerteInicio = -1;
+    private boolean animacionMuerteFinalizada = false;
 
-    long intervalo2 = 100; // ms * 1M = ns
+    private int vidasRestantes;
+
     public boolean isConVida() {
         return conVida;
     }
@@ -31,17 +35,32 @@ public class Jugador extends Entidad {
 
 
 
-    public Jugador(Posicion posicion, String direccion, HojaSprites hojaSprites, long siguienteFrame, int frameActual, long siguienteMovimiento, long siguienteWaka, int puntuacion) {
-        super(posicion, direccion, hojaSprites, siguienteFrame, frameActual, siguienteMovimiento, Color.WHITE);
+    public Jugador(Posicion posicion, String direccion) throws IOException, ParseException {
+
+        super(posicion, direccion, Color.WHITE);
         this.intentandoNuevaDireccion = false;
         this.intentandoNuevaDireccionDir = null;
         this.intentandoNuevaDireccionRestantes = -1;
-        this.siguienteWaka = siguienteWaka;
+        this.siguienteWaka = 0;
 
         this.setSiguienteMovimiento(Controlador.ahora());
         this.setSiguienteFrame(Controlador.ahora());
+
+        this.vidasRestantes = Constantes.VIDAS_INICIALES;
     }
 
+    public int getVidasRestantes() {
+        return vidasRestantes;
+    }
+    public void setVidasRestantes(int vidasRestantes) {
+        this.vidasRestantes = vidasRestantes;
+    }
+
+    /**
+     * La funcion dibuja el jugador sobre el GraphicsContext. El sprite que dibujara sera de formato de string "frame_" + un integer que indica el frame en el que se encuentra.
+     * Mientras este vivo, tambien, antes de dibujar el jugador, rotaremos hacia la direccion a la que mira. Cuando este muerto, no.
+     * @param gc GraphicsContext del Main sobre el que dibujar
+     */
     @Override
     void dibujar(GraphicsContext gc) {
         double dimensionJugador = getHojaSprites().getSpriteData().get("frame_" + getFrameActual()).getWidth();
@@ -49,8 +68,7 @@ public class Jugador extends Entidad {
         double posicionY = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(16 / 2* Constantes.ESCALADO_SPRITE) ;
 
 
-        String sprite = "";
-        sprite = "frame_" + getFrameActual();
+        String sprite = "frame_" + getFrameActual();
 
         // Si el jugador no se encuentra con vida, se estara mostrando la animacion de morir
         // Sprites van desde index 3 al 13
@@ -63,8 +81,7 @@ public class Jugador extends Entidad {
                 if (Controlador.ahora() + 100 > this.animacionMuerteInicio + 100 * (getFrameActual() - 3))
                     this.setFrameActual(this.getFrameActual() + 1);
 
-                if (getFrameActual() == 14)
-                    animacionMuerteFinalizada = true;
+                if (getFrameActual() == 14) animacionMuerteFinalizada = true;
             }
         }
 
@@ -90,29 +107,41 @@ public class Jugador extends Entidad {
         gc.drawImage(spriteFinal, posicionX, posicionY, dimensionJugador, dimensionJugador);
     }
 
+    /**
+     * Funcion que se encarga de mover al jugador. Movera una posicion sobre la coordenada X o Y, dependiendo la direccion actual del jugador.
+     * Tambien, esta funcion se encarga de sumar 1 al frame en la animacion del jugador, pues queremos que se actualice como maximo 1 vez por movimiento.
+     */
     @Override
-        public void mover() {
-            Posicion posicionDeseada = posicionEnDireccion(getPosicion(), getDireccion());
-            if (validarMovimiento(posicionDeseada) && Controlador.ahora() > getSiguienteFrame()){
-                if(getFrameActual() == 0) setFrameActual(1);
-                else if (getFrameActual() == 1) setFrameActual(2);
-                else setFrameActual(0);
+    public void mover() {
+        Posicion posicionDeseada = posicionEnDireccion(getPosicion(), getDireccion());
+        if (validarMovimiento(posicionDeseada) && Controlador.ahora() > getSiguienteFrame()){
+            if(getFrameActual() == 0) setFrameActual(1);
+            else if (getFrameActual() == 1) setFrameActual(2);
+            else setFrameActual(0);
 
-                setSiguienteFrame(Controlador.ahora() + intervalo2);
-            }
-
-            if (Controlador.ahora() > getSiguienteMovimiento()){
-                setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_JUGADOR);
-
-                String direccion = intentandoNuevaDireccionDir;
-                if (!intentandoNuevaDireccion || !intentarNuevaDireccion(direccion))
-                    if (validarMovimiento(posicionDeseada))
-                        actualizarPosicion(posicionDeseada);
-            }
-
-            detectarComida();
+            setSiguienteFrame(Controlador.ahora() + Constantes.COOLDOWN_FRAME);
         }
 
+        if (Controlador.ahora() > getSiguienteMovimiento()){
+            setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_JUGADOR);
+
+            String direccion = intentandoNuevaDireccionDir;
+            if (!intentandoNuevaDireccion || !intentarNuevaDireccion(direccion))
+                if (validarMovimiento(posicionDeseada))
+                    actualizarPosicion(posicionDeseada);
+        }
+
+        detectarComida();
+    }
+
+    /**
+     * Funcion que se encarga de comprobar si hay comida (ya sea fruta pequeña o grande) en la posicion en la que se encuentra el jugador. Si la hay:
+     * <ul>
+     * <li> Sonara el sonido "waka" si se cumple los requisitos.</li>
+     * <li> Añadira la puntuacion.</li>
+     * <li>Comprobara cuantas frutas quedan. Si hay 0, el nivel habra finalizado y avisara al Controlador para avanzar de nivel.</li>
+     * </ul>
+     */
     void detectarComida() {
         HashMap<String, ArrayList<Object>> frutasReemplazos = new HashMap<>();
         frutasReemplazos.put(".", new ArrayList<>(Arrays.asList("_", Constantes.PUNTUACION_FRUTA_PEQ)));
@@ -140,10 +169,12 @@ public class Jugador extends Entidad {
                 Controlador.forzarHuidaFantasmas();
             }
 
-            if (Controlador.vidasJugador < Constantes.VIDASMAX) {
+
+            // PARTE VIDAS - TODO
+            if (Controlador.jugador.getVidasRestantes() < Constantes.VIDASMAX) {
                 int num = Math.round((float) Controlador.puntuacion / Constantes.VIDAPORPUNTUACION) * Constantes.VIDAPORPUNTUACION;
                 if (Controlador.puntuacion > Constantes.VIDAPORPUNTUACION && (num) % Constantes.VIDAPORPUNTUACION == 0 && !Controlador.vidasDadas.contains(num)) {
-                    Controlador.vidasJugador += 1;
+                    this.vidasRestantes += 1;
                     Controlador.vidasDadas.add(num);
                     Controlador.controladorSonido.getVidaAnyadida().play();
 
@@ -152,13 +183,20 @@ public class Jugador extends Entidad {
 
             if (Controlador.comprobarFrutas() == 0) { // El nivel ha finalizado.
                 Controlador.momentoParpadeo = Controlador.ahora() + 2000;
-                Controlador.momentoAvance = Controlador.ahora() + 5000;
+
+                Controlador.esperaRazon = "avance";
+                Controlador.esperaMomento = Controlador.ahora() + 5000;
+
                 Controlador.nivelFinalizado = true;
                 Controlador.controladorSonido.getHuidaFantasmas().stop();
             }
         }
     }
 
+    /**
+     * Funcion para hacer mas facil el forzar la posicion del jugador. Sera llamada solamente desde la funcion {@link Jugador#mover()}, solo cuando cumpla los requisitos.
+     * @param nuevaPosicion La posicion deseada a la que se va a mover obligatoriamente
+     */
     void actualizarPosicion(Posicion nuevaPosicion){
         setPosicion(nuevaPosicion);
     }
@@ -174,6 +212,11 @@ public class Jugador extends Entidad {
     }
 
 
+    /**
+     * Funcion que determina si una posicion deseada es valida o no.
+     * @param posicionDeseada Posicion que se desea comprobar
+     * @return {@code true} si la posicion deseada esta libre y podemos movernos a ella. {@code false} si no lo esta.
+     */
     boolean validarMovimiento(Posicion posicionDeseada){
         ArrayList<String> obstaculos = new ArrayList<String>(Arrays.asList("#", "G"));
 
@@ -181,15 +224,15 @@ public class Jugador extends Entidad {
         return !obstaculos.contains(Controlador.estructuraFuncionalMapa.get(posicionDeseada.getY()).get(posicionDeseada.getX()));
     }
 
-    /*
-    * Funcion  para hacer el control mas suave.
-    * Una vez que el jugador pulse una tecla, si la direccion a la que quiere ir es incorrecta (hay un obstaculo)
-    * entonces, esta funcion intentara hacer ese mismo movimiento los siguientes 5 frames.
-    * Esto ya que, a veces el jugador puede darle una nueva direccion en el frame incorrecto y no funcionar.
-    * @param la direccion a la que se quiere intentar mover
-    * @return si se ha podido mover a la nueva direccion.
+    /**
+     * Funcion  para hacer el control mas suave.
+     * Una vez que el jugador pulse una tecla, si la direccion a la que quiere ir es incorrecta (hay un obstaculo)
+     * entonces, esta funcion intentara hacer ese mismo movimiento los siguientes 5 frames.
+     * Esto ya que, a veces el jugador puede darle una nueva direccion en el frame incorrecto y no funcionar.
+     * @param direccionAIntentar la direccion a la que se quiere intentar mover
+     * @return {@code true} si se ha podido mover a la nueva direccion, {@code false} si no.
      */
-    boolean intentarNuevaDireccion(String direccionAIntentar){
+    public boolean intentarNuevaDireccion(String direccionAIntentar){
         if (intentandoNuevaDireccion) {
             intentandoNuevaDireccionRestantes--;
 
