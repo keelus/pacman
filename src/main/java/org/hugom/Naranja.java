@@ -5,8 +5,8 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class Naranja extends Fantasma {
-    public Naranja(Posicion posicion, String direccion, Posicion objetivo, EstadosFantasma estado, Posicion objetivoDispersion) throws IOException, ParseException {
-        super(posicion, direccion, Color.ORANGE, objetivo, estado, objetivoDispersion, "naranja", 21.0);
+    public Naranja(Posicion posicion, String direccion, Posicion objetivo, EstadosFantasma estado) throws IOException, ParseException {
+        super(posicion, direccion, Color.ORANGE, objetivo, estado, "naranja", 21.0);
     }
 
 
@@ -15,16 +15,10 @@ public class Naranja extends Fantasma {
         if (getEstado() != EstadosFantasma.ATAQUE)
             return;
 
-
-        Posicion posJugador = new Posicion(jugador.getPosicion().getX(), jugador.getPosicion().getY());
-        Posicion posActual = new Posicion(getPosicion().getX(), getPosicion().getY());
+        Posicion posJugador = jugador.getPosicion();
+        Posicion posActual = getPosicion();
         double distancia = Posicion.calcularDistancia(posJugador, posActual);
 
-
-        if (distancia > 7)
-            setObjetivo(jugador.getPosicion());
-        else
-            setObjetivo(new Posicion(2, 35));
-
+        setObjetivo(distancia > 7 ? posJugador : new Posicion(2, 35));
     }
 }

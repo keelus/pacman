@@ -5,31 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Reorganizado codigo vario.">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Azul.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Azul.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/ControladorSonido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/ControladorSonido.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Entidad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Entidad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/EstadosFantasma.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/EstadosFantasma.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Fantasma.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Fantasma.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/HojaSprites.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/HojaSprites.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Jugador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Jugador.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Naranja.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Naranja.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Posicion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Posicion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Rojo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Rojo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Rosa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Rosa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Azul.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Azul.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Constantes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Constantes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Entidad.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Entidad.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Jugador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Jugador.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Naranja.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Naranja.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Rojo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Rojo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Rosa.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/hugom/Rosa.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/SpriteLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/SpriteLoader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +82,7 @@
       <workItem from="1683569056624" duration="4539000" />
       <workItem from="1683573933468" duration="22000" />
       <workItem from="1683573960881" duration="2744000" />
+      <workItem from="1683646792266" duration="3917000" />
     </task>
     <task id="LOCAL-00001" summary="Arreglado el error de path al cargar imagenes de Sprite">
       <created>1682356082981</created>

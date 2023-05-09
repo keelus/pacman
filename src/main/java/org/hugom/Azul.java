@@ -6,8 +6,8 @@ import java.io.IOException;
 
 
 public class Azul extends Fantasma{
-    public Azul(Posicion posicion, String direccion , Posicion objetivo, EstadosFantasma estado, Posicion objetivoDispersion) throws IOException, ParseException {
-        super(posicion, direccion, Color.CYAN, objetivo, estado, objetivoDispersion, "azul", 14.0);
+    public Azul(Posicion posicion, String direccion , Posicion objetivo, EstadosFantasma estado) throws IOException, ParseException {
+        super(posicion, direccion, Color.CYAN, objetivo, estado, "azul", 14.0);
     }
 
     @Override
@@ -15,14 +15,10 @@ public class Azul extends Fantasma{
         if (getEstado() != EstadosFantasma.ATAQUE)
             return;
 
-
-
-
-
-        Posicion posJugador = new Posicion(jugador.getPosicion().getX(), jugador.getPosicion().getY());
+        Posicion posJugador = jugador.getPosicion().copiar();
         String dirJugador = jugador.getDireccion();
 
-        Posicion posRojo = new Posicion(rojo.getPosicion().getX(), rojo.getPosicion().getY());
+        Posicion posRojo = rojo.getPosicion().copiar();
 
         switch(dirJugador){
             case "izq":
@@ -41,7 +37,5 @@ public class Azul extends Fantasma{
         }
         Posicion posicionFinal = Posicion.rotar180Grados(posJugador, posRojo);
         setObjetivo(posicionFinal);
-
     }
-
 }

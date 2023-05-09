@@ -42,9 +42,7 @@ public class Posicion  {
         desplazamiento.x *= -1;
         desplazamiento.y *= -1;
 
-        Posicion puntoRotado = new Posicion(puntoOrigen.x + desplazamiento.x, puntoOrigen.y + desplazamiento.y);
-
-        return puntoRotado;
+        return new Posicion(puntoOrigen.x + desplazamiento.x, puntoOrigen.y + desplazamiento.y); // punto rotado
     }
 
     @Override

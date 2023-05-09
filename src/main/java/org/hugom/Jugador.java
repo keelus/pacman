@@ -78,7 +78,8 @@ public class Jugador extends Entidad {
                 this.animacionMuerteInicio = Controlador.ahora() + 333;
                 setFrameActual(3);
             } else if (!this.animacionMuerteFinalizada){
-                if (Controlador.ahora() + 100 > this.animacionMuerteInicio + 100 * (getFrameActual() - 3))
+                if (Controlador.ahora() + Constantes.COOLDOWN_MUERTE_JUGADOR_ANIMACION > this.animacionMuerteInicio +
+                        Constantes.COOLDOWN_MUERTE_JUGADOR_ANIMACION * (getFrameActual() - 3))
                     this.setFrameActual(this.getFrameActual() + 1);
 
                 if (getFrameActual() == 14) animacionMuerteFinalizada = true;
@@ -218,7 +219,7 @@ public class Jugador extends Entidad {
      * @return {@code true} si la posicion deseada esta libre y podemos movernos a ella. {@code false} si no lo esta.
      */
     boolean validarMovimiento(Posicion posicionDeseada){
-        ArrayList<String> obstaculos = new ArrayList<String>(Arrays.asList("#", "G"));
+        ArrayList<String> obstaculos = new ArrayList<>(Arrays.asList("#", "G"));
 
         // Si hay un obstauclo en la posicion, devuelve false. Si no lo hay, devuelve true, pues seria un movimiento valido
         return !obstaculos.contains(Controlador.estructuraFuncionalMapa.get(posicionDeseada.getY()).get(posicionDeseada.getX()));
@@ -257,7 +258,7 @@ public class Jugador extends Entidad {
 
     @Override
     void reiniciar(double miliSegundosExtra){
-        setPosicion(new Posicion(16, 26));
+        setPosicion(Constantes.POS_JUGADOR.copiar());
         setDireccion("der");
         setFrameActual(0);
         this.intentandoNuevaDireccion = false;
@@ -268,6 +269,4 @@ public class Jugador extends Entidad {
         this.setSiguienteMovimiento(Controlador.ahora());
         this.setSiguienteFrame(Controlador.ahora());
     }
-
-
 }

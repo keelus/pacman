@@ -1,20 +1,16 @@
 package org.hugom;
 import javafx.scene.media.AudioClip;
 
-import javax.sound.sampled.*;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-
 public class ControladorSonido {
 
-    private AudioClip jugadorComer;
-    private AudioClip jugadorComerFruta;
-    private AudioClip jugadorComerFantasma;
-    private AudioClip huidaFantasmas;
-    private AudioClip muerteJugador;
-    private AudioClip vueltaSpawnFantasma;
-    private AudioClip inicioJuego;
-    private AudioClip vidaAnyadida;
+    private final AudioClip jugadorComer;
+    private final AudioClip jugadorComerFruta;
+    private final AudioClip jugadorComerFantasma;
+    private final AudioClip huidaFantasmas;
+    private final AudioClip muerteJugador;
+    private final AudioClip vueltaSpawnFantasma;
+    private final AudioClip inicioJuego;
+    private final AudioClip vidaAnyadida;
 
     public AudioClip getJugadorComer() {
         return jugadorComer;

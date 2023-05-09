@@ -132,10 +132,9 @@ public class Main extends Application {
             else if (event.getCode() == KeyCode.K)Controlador.nivelActual--;
 
             else if (event.getCode() == KeyCode.DIGIT1) Controlador.forzarHuidaFantasmas();
-            else if (event.getCode() == KeyCode.DIGIT2) Controlador.actualizarEstadosFantasmas(EstadosFantasma.DISPERSION);
-            else if (event.getCode() == KeyCode.DIGIT3) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ATAQUE);
-            else if (event.getCode() == KeyCode.DIGIT4) Controlador.actualizarEstadosFantasmas(EstadosFantasma.MUERTO);
-            else if (event.getCode() == KeyCode.DIGIT5) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ESPERASPAWN);
+            else if (event.getCode() == KeyCode.DIGIT2) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ATAQUE);
+            else if (event.getCode() == KeyCode.DIGIT3) Controlador.actualizarEstadosFantasmas(EstadosFantasma.MUERTO);
+            else if (event.getCode() == KeyCode.DIGIT4) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ESPERASPAWN);
 
             else if (event.getCode() == KeyCode.DIGIT8) {
                 int frame = Controlador.jugador.getFrameActual() - 1;
@@ -277,7 +276,7 @@ public class Main extends Application {
                     textoPuntuacion.setText("HIGH SCORE\n" + Controlador.puntuacion + "  ");
 
                     Controlador.dibujarVidas(gc);
-                    Controlador.dibujarNivel(gc);
+                    Controlador.dibujarContadorNivel(gc);
                 }
             }
         };

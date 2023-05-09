@@ -12,8 +12,6 @@ public abstract class Fantasma extends Entidad {
     Posicion objetivo;
     String direccionContraria;
     EstadosFantasma estado;
-    EstadosFantasma estadoAnterior;
-    Posicion objetivoDispersion;
     Posicion posicionSpawnOjos;
     String colorFantasma;
     long huidaSiguienteFrame = -1;
@@ -40,43 +38,32 @@ public abstract class Fantasma extends Entidad {
     public void setEstado(EstadosFantasma estado) {
         this.estado = estado;
     }
-    public EstadosFantasma getEstadoAnterior() {
-        return estadoAnterior;
-    }
     public String getColorFantasma() {
         return colorFantasma;
     }
     /* Fin setters y getters */
 
 
-    public Fantasma(Posicion posicion, String direccion , Color colorDebug, Posicion objetivo, EstadosFantasma estado, Posicion objetivoDispersion, String colorFantasma, double esperaSpawnInicial) throws IOException, ParseException {
+    public Fantasma(Posicion posicion, String direccion , Color colorDebug, Posicion objetivo, EstadosFantasma estado, String colorFantasma, double esperaSpawnInicial) throws IOException, ParseException {
         super(posicion, direccion, colorDebug);
         this.objetivo = objetivo;
-        switch (direccion) {
-            case "izq": this.direccionContraria = "der"; break;
-            case "der": this.direccionContraria = "izq"; break;
-            case "arr": this.direccionContraria = "abj"; break;
-            case "abj": this.direccionContraria = "arr"; break;
-        }
+        this.direccionContraria = direccionContrariaDe(direccion);
         this.estado = estado;
-        this.objetivoDispersion = objetivoDispersion;
         this.posicionSpawnOjos = new Posicion(14, 17); // Ubicacion donde iran los ojos, una vez el fantasma muera
         this.colorFantasma = colorFantasma;
-        this.esperaSpawnInicial = esperaSpawnInicial;
-        if(!colorFantasma.equals("rojo"))
+        if(!colorFantasma.equals("rojo")) {
+            this.esperaSpawnInicial = esperaSpawnInicial;
             this.momentoSpawnInicial = Controlador.ahora() + esperaSpawnInicial * 1000 + Constantes.COOLDOWN_INICIO_GAME;
+        }
     }
 
     @Override
     public void mover() {
-        String direccion = null;
+        String direccion;
 
-        if(Controlador.ahora() < getSiguienteMovimiento()){
+        if(Controlador.ahora() < getSiguienteMovimiento()){ // Si aun no tiene que moverse, comprobaremos si al menos podemos cambiar de frame
             if(Controlador.ahora() > getSiguienteFrame()){
-                if(getFrameActual() == 1)
-                    setFrameActual(0);
-                else setFrameActual(1);
-
+                setFrameActual(getFrameActual() == 0 ? 1 : 0);
                 setSiguienteFrame(Controlador.ahora() + Constantes.COOLDOWN_FRAME);
             }
             return;
@@ -86,14 +73,21 @@ public abstract class Fantasma extends Entidad {
             this.objetivo = new Posicion(new Random().nextInt(3) + 14, 16);
         }
 
-        if (this.estado == EstadosFantasma.DISPERSION) setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_FANTASMA_DISPERSION);
-        else if (this.estado == EstadosFantasma.HUIDA) setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_FANTASMA_HUIDA);
-        else if (this.estado == EstadosFantasma.MUERTO) setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_FANTASMA_MUERTO);
-        else setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_FANTASMA);
+        // El cooldown de movimiento (rapidez) dependera del estado en el que se encuentra el fantasma
+        switch(this.estado){
+            case HUIDA:
+                setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_FANTASMA_HUIDA);
+                break;
+            case MUERTO:
+                setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_FANTASMA_MUERTO);
+                break;
+            default:
+                setSiguienteMovimiento(Controlador.ahora() + Constantes.COOLDOWN_MOVIMIENTO_FANTASMA);
+                break;
+        }
 
         if(getEstado() == EstadosFantasma.HUIDA) {
             setObjetivo(new Posicion(-1, -1));
-            HashMap<String, Boolean> posiciones = posicionesValidas();
             ArrayList<String> soloValidas = new ArrayList<>();
 
             for (String posicion : posicionesValidas().keySet()) {
@@ -110,24 +104,22 @@ public abstract class Fantasma extends Entidad {
         }
 
 
+        setDireccionContraria(direccionContrariaDe(direccion));
         switch(direccion){
             case "izq":
-                setDireccionContraria("der");
                 getPosicion().setX(getPosicion().getX()-1);
-            break;
+                break;
             case "der":
-                setDireccionContraria("izq");
                 getPosicion().setX(getPosicion().getX()+1);
-            break;
+                break;
             case "arr":
-                setDireccionContraria("abj");
                 getPosicion().setY(getPosicion().getY()-1);
-            break;
+                break;
             case "abj":
-                setDireccionContraria("arr");
                 getPosicion().setY(getPosicion().getY()+1);
-            break;
+                break;
         }
+
         if (getPosicion().getX() == 32) getPosicion().setX(0);
         else if (getPosicion().getX() == -1) getPosicion().setX(31);
 
@@ -247,19 +239,18 @@ public abstract class Fantasma extends Entidad {
      */
     @Override
     void dibujar(GraphicsContext gc) {
-        calcularDistancias();
-        String sprite = "";
+        String sprite;
 
         double dimensionFantasma = getHojaSprites().getSpriteData().get(getColorFantasma() + "_" + getDireccion() + "_" + getFrameActual()).getWidth();
-        double posicionX = this.getPosicion().getX() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2* Constantes.ESCALADO_SPRITE)  - 2 * 8 * Constantes.ESCALADO_SPRITE;
-        double posicionY = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2* Constantes.ESCALADO_SPRITE) ;
+        double posicionX = this.getPosicion().getX() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2 * Constantes.ESCALADO_SPRITE)  - 2 * 8 * Constantes.ESCALADO_SPRITE;
+        double posicionY = this.getPosicion().getY() * Constantes.ESCALADO_SPRITE * 8 + Math.floor(8 * Constantes.ESCALADO_SPRITE / 2) - Math.floor(13 / 2 * Constantes.ESCALADO_SPRITE) ;
 
 
 
         switch(this.estado){
             case MUERTO:
                 sprite = "ojos_" + getDireccion();
-            break;
+                break;
             case HUIDA:
                 double tiempoRestante = Controlador.finHuidaFantasmas - Controlador.ahora();
                 if (tiempoRestante < 3500){
@@ -279,10 +270,10 @@ public abstract class Fantasma extends Entidad {
                 } else {
                     sprite = "huida_azul_" + getFrameActual();
                 }
-            break;
+                break;
             default:
                 sprite = getColorFantasma() + "_" + getDireccion() + "_" + getFrameActual();
-            break;
+                break;
 
 
         }
@@ -304,21 +295,17 @@ public abstract class Fantasma extends Entidad {
 
     /**
      * Funcion que se encarga de que cada fantasma cambie de estado correctamente, haciendo los cambios necesarios en cada estado, si es necesario:
-     *   - Si cambia a modo {@link EstadosFantasma#DISPERSION}, el fantasma ira a una esquina de la pantalla. TODO
      *   - Si cambia a modo {@link EstadosFantasma#MUERTO}, el fantasma tendra de objetivo regresar al spawn.
      *   - Si cambia a modo {@link EstadosFantasma#ESPERASPAWN}, significa que el fantasma muerto ya llego al spawn, y su objetivo es salir de este.
      * @param nuevoEstado el estado al que se va a cambiar el fantasma
      */
     public void cambiarEstado(EstadosFantasma nuevoEstado){
-        this.estadoAnterior = this.estado;
         this.estado = nuevoEstado;
 
-        if (this.estado == EstadosFantasma.DISPERSION)
-            this.objetivo = new Posicion(this.objetivoDispersion.getX(), this.objetivoDispersion.getY());
-        else if (this.estado == EstadosFantasma.MUERTO)
+        if (this.estado == EstadosFantasma.MUERTO)
             this.objetivo = new Posicion(this.posicionSpawnOjos.getX(), this.posicionSpawnOjos.getY());
         else if (this.estado == EstadosFantasma.ESPERASPAWN)
-                this.objetivo = new Posicion(16, 14);
+            this.objetivo = new Posicion(16, 14);
 
         String helper = getDireccion();
         setDireccion(direccionContraria);
@@ -327,12 +314,18 @@ public abstract class Fantasma extends Entidad {
 
     abstract void establecerObjetivoAtaque(Jugador jugador, Rojo rojo);
 
+
+    /**
+     * Funcion que detecta si el fantasma y el jugador tienen la misma posicion (coordenadas X e Y iguales), y
+     * realiza las acciones dependiendo si el fantasma esta vivo o muerto.
+     * @param jugador de la que se usa su posicion
+     */
     public void detectarColisionJugador(Jugador jugador){
         if (getPosicion().getX() == jugador.getPosicion().getX() && getPosicion().getY() == jugador.getPosicion().getY()){
             if (this.estado == EstadosFantasma.HUIDA) { // Jugador come a fantasma
                 Controlador.controladorSonido.getJugadorComerFantasma().play();
                 cambiarEstado(EstadosFantasma.MUERTO);
-                Controlador.puntuacion += 4000;
+                Controlador.puntuacion += Constantes.PUNTUACION_FANTASMA_BASE;
             }
             else if (this.estado != EstadosFantasma.MUERTO){ // Si el fantasma puede matar
                 if (Controlador.jugador.isConVida() && !Controlador.perdido){
@@ -346,41 +339,55 @@ public abstract class Fantasma extends Entidad {
         }
     }
 
+    /**
+     * Funcion que reinicia todos los valores del fantasma para que este como al inicio.
+     * @param miliSegundosExtra que se sumara al tiempo de spawn de los tres fantasmas que empiezan dentro (rosa, azul y naranja)
+     */
     @Override
     void reiniciar(double miliSegundosExtra){
         switch(this.colorFantasma){
             case "rojo":
                 setDireccion("izq");
-                setDireccionContraria("der");
-                setPosicion(new Posicion(16, 14));
+                setDireccionContraria(direccionContrariaDe("izq"));
+                setPosicion(Constantes.POS_ROJO.copiar());
                 setEstado(EstadosFantasma.ATAQUE);
-                this.objetivo = new Posicion(-1, -1);
-                this.momentoSpawnInicial = Controlador.ahora() + this.esperaSpawnInicial * 1000 + miliSegundosExtra;
-            break;
+                break;
             case "rosa":
                 setDireccion("abj");
-                setDireccionContraria("arr");
-                setPosicion(new Posicion(15, 17));
+                setDireccionContraria(direccionContrariaDe("abj"));
+                setPosicion(Constantes.POS_ROSA.copiar());
                 setEstado(EstadosFantasma.ESPERASPAWNINICIAL);
-                this.objetivo = new Posicion(-1, -1);
-                this.momentoSpawnInicial = Controlador.ahora() + this.esperaSpawnInicial * 1000 + miliSegundosExtra;
-            break;
+                break;
             case "azul":
                 setDireccion("arr");
-                setDireccionContraria("abj");
-                setPosicion(new Posicion(14, 17));
+                setDireccionContraria(direccionContrariaDe("arr"));
+                setPosicion(Constantes.POS_AZUL.copiar());
                 setEstado(EstadosFantasma.ESPERASPAWNINICIAL);
-                this.objetivo = new Posicion(-1, -1);
-                this.momentoSpawnInicial = Controlador.ahora() + this.esperaSpawnInicial * 1000 + miliSegundosExtra;
                 break;
             case "naranja":
                 setDireccion("arr");
-                setDireccionContraria("abj");
-                setPosicion(new Posicion(17, 17));
+                setDireccionContraria(direccionContrariaDe("arr"));
+                setPosicion(Constantes.POS_NARANJA.copiar());
                 setEstado(EstadosFantasma.ESPERASPAWNINICIAL);
-                this.objetivo = new Posicion(-1, -1);
-                this.momentoSpawnInicial = Controlador.ahora() + this.esperaSpawnInicial * 1000 + miliSegundosExtra;
                 break;
+        }
+        this.momentoSpawnInicial = Controlador.ahora() + this.esperaSpawnInicial * 1000 + miliSegundosExtra;
+        this.objetivo = new Posicion(-1, -1);
+    }
+
+
+    /**
+     * Funcion que devuelve la direccion contraria a una direccion.
+     * @param direccion original
+     * @return direccion contraria a esa direccion
+     */
+    public String direccionContrariaDe(String direccion){
+        switch(direccion){
+            case "arr": return "abj";
+            case "abj": return "arr";
+            case "der": return "izq";
+            case "izq": return "der";
+            default: return null;
         }
     }
 }

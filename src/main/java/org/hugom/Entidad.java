@@ -9,11 +9,11 @@ import java.io.IOException;
 public abstract class Entidad {
     private Posicion posicion;
     private String direccion;
-    private HojaSprites hojaSprites;
+    private final HojaSprites hojaSprites;
     private long siguienteFrame = 0;
     private int frameActual = 0;
     private long siguienteMovimiento = 0;
-    private Color colorDebug;
+    private final Color colorDebug;
 
     abstract void dibujar(GraphicsContext gc);
     abstract void mover();
@@ -58,9 +58,6 @@ public abstract class Entidad {
     public HojaSprites getHojaSprites() {
         return hojaSprites;
     }
-    public void setHojaSprites(HojaSprites hojaSprites) {
-        this.hojaSprites = hojaSprites;
-    }
     public long getSiguienteFrame() {
         return siguienteFrame;
     }
@@ -81,9 +78,6 @@ public abstract class Entidad {
     }
     public Color getColorDebug() {
         return colorDebug;
-    }
-    public void setColorDebug(Color colorDebug) {
-        this.colorDebug = colorDebug;
     }
 
     public Entidad(Posicion posicion, String direccion, Color colorDebug) throws IOException, ParseException {

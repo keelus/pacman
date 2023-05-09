@@ -8,23 +8,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
 public class HojaSprites {
-    private String rutaImagen;
-    private String rutaIndices;
+    private final String rutaImagen;
+    private final String rutaIndices;
 
     private HashMap<String, Image> spriteData;
 
-    public String getRutaImagen() {
-        return rutaImagen;
-    }
-    public void setRutaImagen(String rutaImagen) {
-        this.rutaImagen = rutaImagen;
-    }
-    public String getRutaIndices() {
-        return rutaIndices;
-    }
-    public void setRutaIndices(String rutaIndices) {
-        this.rutaIndices = rutaIndices;
-    }
     public HashMap<String, Image> getSpriteData() {
         return spriteData;
     }
@@ -40,12 +28,8 @@ public class HojaSprites {
     }
 
     public HashMap<String, Image> cargarSprites() throws IOException, ParseException {
-        HashMap<String, Image> sprites = new HashMap<>();
-
         HashMap<String, DatoSprite> datosJSON = leerJSON(this.rutaIndices);
-
-//        sprites.putAll(SpriteLoader.loadSprites(this.rutaImagen, datosJSON));
-        sprites.putAll(SpriteLoader.loadSprites(this.rutaImagen, datosJSON));
+        HashMap<String, Image> sprites = new HashMap<>(SpriteLoader.loadSprites(this.rutaImagen, datosJSON));
 
         System.out.println("[CARGA] Cargado sprite con el nombre \"" + rutaImagen + "\"");
 
@@ -55,7 +39,7 @@ public class HojaSprites {
 
     public HashMap<String, DatoSprite> leerJSON(String rutaJSON) throws IOException, ParseException {
 
-        HashMap<String, DatoSprite> spritesCargados = new HashMap<String, DatoSprite>();
+        HashMap<String, DatoSprite> spritesCargados = new HashMap<>();
 
         InputStream streamRutaJSON = getClass().getResourceAsStream(rutaJSON);
 
@@ -115,9 +99,6 @@ public class HojaSprites {
         }
         public void setPosicion(Posicion posicion) {
             this.posicion = posicion;
-        }
-
-        public DatoSprite() {
         }
 
         public DatoSprite(Dimension dimension, Posicion posicion) {

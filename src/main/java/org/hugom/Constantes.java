@@ -15,14 +15,13 @@ public class Constantes {
     // PUNTUACIONES
     final static int PUNTUACION_FRUTA_PEQ = 10;
     final static int PUNTUACION_FRUTA_GRA = 50;
-    final static int PUNTUACION_FANTASMA_BASE = 50;
+    final static int PUNTUACION_FANTASMA_BASE = 200;
     final static int PUNTUACION_FANTASMA_MULTIPLICADOR = 2;
 
     // COOLDOWNS
     final static int COOLDOWN_FRAME = 100;
     final static int COOLDOWN_MOVIMIENTO_JUGADOR = 140;
     final static int COOLDOWN_MOVIMIENTO_FANTASMA = 140;
-    final static int COOLDOWN_MOVIMIENTO_FANTASMA_DISPERSION = 120;
     final static int COOLDOWN_MOVIMIENTO_FANTASMA_HUIDA = 200;
     final static int COOLDOWN_MOVIMIENTO_FANTASMA_MUERTO = 30;
     final static int COOLDOWN_MUERTE_JUGADOR = 1000;
