@@ -1,0 +1,402 @@
+{
+  "rojo_der_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      0,
+      0
+    ]
+  },
+  "rojo_der_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      14,
+      0
+    ]
+  },
+  "rojo_izq_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      28,
+      0
+    ]
+  },
+  "rojo_izq_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      42,
+      0
+    ]
+  },
+  "rojo_arr_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      56,
+      0
+    ]
+  },
+  "rojo_arr_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      70,
+      0
+    ]
+  },
+  "rojo_abj_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      84,
+      0
+    ]
+  },
+  "rojo_abj_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      98,
+      0
+    ]
+  },
+  "rosa_der_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      0,
+      14
+    ]
+  },
+  "rosa_der_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      14,
+      14
+    ]
+  },
+  "rosa_izq_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      28,
+      14
+    ]
+  },
+  "rosa_izq_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      42,
+      14
+    ]
+  },
+  "rosa_arr_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      56,
+      14
+    ]
+  },
+  "rosa_arr_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      70,
+      14
+    ]
+  },
+  "rosa_abj_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      84,
+      14
+    ]
+  },
+  "rosa_abj_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      98,
+      14
+    ]
+  },
+  "azul_der_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      0,
+      28
+    ]
+  },
+  "azul_der_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      14,
+      28
+    ]
+  },
+  "azul_izq_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      28,
+      28
+    ]
+  },
+  "azul_izq_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      42,
+      28
+    ]
+  },
+  "azul_arr_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      56,
+      28
+    ]
+  },
+  "azul_arr_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      70,
+      28
+    ]
+  },
+  "azul_abj_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      84,
+      28
+    ]
+  },
+  "azul_abj_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      98,
+      28
+    ]
+  },
+  "naranja_der_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      0,
+      42
+    ]
+  },
+  "naranja_der_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      14,
+      42
+    ]
+  },
+  "naranja_izq_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      28,
+      42
+    ]
+  },
+  "naranja_izq_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      42,
+      42
+    ]
+  },
+  "naranja_arr_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      56,
+      42
+    ]
+  },
+  "naranja_arr_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      70,
+      42
+    ]
+  },
+  "naranja_abj_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      84,
+      42
+    ]
+  },
+  "naranja_abj_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      98,
+      42
+    ]
+  },
+  "huida_azul_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      0,
+      56
+    ]
+  },
+  "huida_azul_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      14,
+      56
+    ]
+  },
+  "huida_blanco_0": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      28,
+      56
+    ]
+  },
+  "huida_blanco_1": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      42,
+      56
+    ]
+  },
+  "ojos_der": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      0,
+      70
+    ]
+  },
+  "ojos_izq": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      14,
+      70
+    ]
+  },
+  "ojos_arr": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      28,
+      70
+    ]
+  },
+  "ojos_abj": {
+    "dimensiones": [
+      14,
+      14
+    ],
+    "coordenadas": [
+      42,
+      70
+    ]
+  }
+}
