@@ -1,11 +1,9 @@
 package org.hugom;
 import javafx.scene.paint.Color;
-import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 
 public class Rojo extends Fantasma{
-    public Rojo(Posicion posicion, String direccion, Posicion objetivo, EstadosFantasma estado) throws IOException, ParseException {
+    public Rojo(Posicion posicion, String direccion, Posicion objetivo, EstadosFantasma estado) {
         super(posicion, direccion, Color.RED, objetivo, estado,"rojo", -1);
     }
 
@@ -15,5 +13,15 @@ public class Rojo extends Fantasma{
         if(getEstado() != EstadosFantasma.ATAQUE)
             return;
         setObjetivo(jugador.getPosicion());
+    }
+
+    @Override
+    void reiniciar(double miliSegundosExtra, boolean reiniciarCompletamente){
+        setDireccion("izq");
+        setDireccionContraria(direccionContrariaDe("izq"));
+        setPosicion(Constantes.POS_ROJO.copiar());
+        setEstado(EstadosFantasma.ATAQUE);
+
+        this.setObjetivo(new Posicion(-1, -1));
     }
 }

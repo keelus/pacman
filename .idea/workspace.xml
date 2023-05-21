@@ -4,23 +4,107 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Reorganizado codigo vario.">
+    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Arreglos y mejoras varias.">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/hugom/CargadorDeSprites.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Azul.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Azul.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Constantes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Controlador.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/ControladorSonido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/ControladorSonido.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Entidad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Entidad.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/EstadosFantasma.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/EstadosFantasma.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Fantasma.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Fantasma.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/HojaSprites.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/HojaSprites.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Jugador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Jugador.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Naranja.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Naranja.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Posicion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Posicion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Rojo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Rojo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Rosa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Rosa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/SpriteLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/SpriteLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/SpriteLoader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Utilidades.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Utilidades.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/comer.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/credit.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/death_1.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/death_2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/eat_fruit.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/eat_ghost.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/extend.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/game_start.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/muerte.wav" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/media/audio/muerte.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/munch_1.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/munch_2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/power_pellet.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/power_pellet2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/retreating.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/siren_1.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/siren_2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/siren_3.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/siren_4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/media/audio/siren_5.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/Pacman-1.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/datos/indicesSprites/spritesFantasmas.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/datos/indicesSprites/spritesFrutas.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/datos/indicesSprites/spritesJugador.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/datos/indicesSprites/spritesJugador_temp.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/datos/indicesSprites/spritesLetras.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/datos/indicesSprites/spritesMapa.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/datos/mapeado.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/datos/mapeado_backup.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/comer.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/credit.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/death_1.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/death_2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/eat_fruit.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/eat_ghost.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/extend.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/game_start.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/intermission.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/muerte.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/munch_1.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/munch_2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/power_pellet.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/power_pellet2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/retreating.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/siren_1.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/siren_2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/siren_3.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/siren_4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/audio/siren_5.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/imagen/ddxdbmy-af5b2a6e-9d85-4a90-a48c-94dc656136e0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/imagen/fantasma.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/imagen/frutas.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/imagen/jugador3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/imagen/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/imagen/spritesheet.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/imagen/spritesheet_blanco.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/media/tipografia/fuente.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Azul.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Constantes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Controlador.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/ControladorSonido.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Dimension.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Entidad.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/EstadosFantasma.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Fantasma.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/HojaSprites$DatoSprite.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/HojaSprites.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Jugador.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Naranja.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Posicion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Rojo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Rosa.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/SpriteLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/hugom/Utilidades.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/original-Pacman-1.0.jar" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +166,8 @@
       <workItem from="1683569056624" duration="4539000" />
       <workItem from="1683573933468" duration="22000" />
       <workItem from="1683573960881" duration="2744000" />
-      <workItem from="1683646792266" duration="3917000" />
+      <workItem from="1683646792266" duration="3960000" />
+      <workItem from="1684661666518" duration="5790000" />
     </task>
     <task id="LOCAL-00001" summary="Arreglado el error de path al cargar imagenes de Sprite">
       <created>1682356082981</created>
@@ -147,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683478997254</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Arreglos y mejoras varias.">
+      <created>1683650739530</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1683650739530</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,6 +251,7 @@
     <MESSAGE value="Pantalla de muerte.&#10;TODO: Reiniciar juego." />
     <MESSAGE value="Reinicio de juego completado." />
     <MESSAGE value="Reorganizado codigo vario." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reorganizado codigo vario." />
+    <MESSAGE value="Arreglos y mejoras varias." />
+    <option name="LAST_COMMIT_MESSAGE" value="Arreglos y mejoras varias." />
   </component>
 </project>

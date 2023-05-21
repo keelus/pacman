@@ -1,9 +1,6 @@
 package org.hugom;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
 
 
 public abstract class Entidad {
@@ -17,31 +14,6 @@ public abstract class Entidad {
 
     abstract void dibujar(GraphicsContext gc);
     abstract void mover();
-    public static Posicion posicionEnDireccion(Posicion posicionActual, String direccion){
-        Posicion posicionNueva = new Posicion(posicionActual.getX(), posicionActual.getY());
-
-        switch(direccion){
-            case "izq":
-                if (posicionActual.getX() == 0) // Si el jugador sobre pasa los bordes visibles, se teletransporta a la derecha del mapa
-                    posicionNueva.setX(31);
-                else
-                    posicionNueva.setX(posicionActual.getX()-1);
-            break;
-            case "der":
-                if (posicionActual.getX() == 31) // Si el jugador sobre pasa los bordes visibles, se teletransporta a la izquierda del mapa
-                    posicionNueva.setX(0);
-                else
-                    posicionNueva.setX(posicionActual.getX()+1);
-                break;
-            case "arr":
-                posicionNueva.setY(posicionActual.getY() - 1);
-                break;
-            case "abj":
-                posicionNueva.setY(posicionActual.getY() + 1);
-                break;
-        }
-        return posicionNueva;
-    }
 
     public Posicion getPosicion() {
         return posicion;
@@ -76,11 +48,8 @@ public abstract class Entidad {
     public void setSiguienteMovimiento(long siguienteMovimiento) {
         this.siguienteMovimiento = siguienteMovimiento;
     }
-    public Color getColorDebug() {
-        return colorDebug;
-    }
 
-    public Entidad(Posicion posicion, String direccion, Color colorDebug) throws IOException, ParseException {
+    public Entidad(Posicion posicion, String direccion, Color colorDebug) {
         if (this instanceof Jugador)
             hojaSprites = new HojaSprites("/media/imagen/jugador3.png", "/datos/indicesSprites/spritesJugador.json");
         else
@@ -91,5 +60,33 @@ public abstract class Entidad {
         this.colorDebug = colorDebug;
     }
 
-    abstract void reiniciar(double miliSegundosExtra);
+
+    public static Posicion posicionEnDireccion(Posicion posicionActual, String direccion){
+        Posicion posicionNueva = new Posicion(posicionActual.getX(), posicionActual.getY());
+
+        switch(direccion){
+            case "izq":
+                if (posicionActual.getX() == 0) // Si el jugador sobre pasa los bordes visibles, se teletransporta a la derecha del mapa
+                    posicionNueva.setX(31);
+                else
+                    posicionNueva.setX(posicionActual.getX()-1);
+                break;
+            case "der":
+                if (posicionActual.getX() == 31) // Si el jugador sobre pasa los bordes visibles, se teletransporta a la izquierda del mapa
+                    posicionNueva.setX(0);
+                else
+                    posicionNueva.setX(posicionActual.getX()+1);
+                break;
+            case "arr":
+                posicionNueva.setY(posicionActual.getY() - 1);
+                break;
+            case "abj":
+                posicionNueva.setY(posicionActual.getY() + 1);
+                break;
+        }
+        return posicionNueva;
+    }
+
+
+    abstract void reiniciar(double miliSegundosExtra, boolean reiniciarCompletamente);
 }

@@ -3,13 +3,13 @@ package org.hugom;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.json.simple.parser.ParseException;
+
+import javax.naming.ldap.Control;
 
 public class Jugador extends Entidad {
     private boolean intentandoNuevaDireccion;
@@ -35,7 +35,7 @@ public class Jugador extends Entidad {
 
 
 
-    public Jugador(Posicion posicion, String direccion) throws IOException, ParseException {
+    public Jugador(Posicion posicion, String direccion) {
 
         super(posicion, direccion, Color.WHITE);
         this.intentandoNuevaDireccion = false;
@@ -171,16 +171,8 @@ public class Jugador extends Entidad {
             }
 
 
-            // PARTE VIDAS - TODO
-            if (Controlador.jugador.getVidasRestantes() < Constantes.VIDASMAX) {
-                int num = Math.round((float) Controlador.puntuacion / Constantes.VIDAPORPUNTUACION) * Constantes.VIDAPORPUNTUACION;
-                if (Controlador.puntuacion > Constantes.VIDAPORPUNTUACION && (num) % Constantes.VIDAPORPUNTUACION == 0 && !Controlador.vidasDadas.contains(num)) {
-                    this.vidasRestantes += 1;
-                    Controlador.vidasDadas.add(num);
-                    Controlador.controladorSonido.getVidaAnyadida().play();
+            Controlador.comprobarAnyadirVida();
 
-                }
-            }
 
             if (Controlador.comprobarFrutas() == 0) { // El nivel ha finalizado.
                 Controlador.momentoParpadeo = Controlador.ahora() + 2000;
@@ -257,7 +249,7 @@ public class Jugador extends Entidad {
     }
 
     @Override
-    void reiniciar(double miliSegundosExtra){
+    void reiniciar(double miliSegundosExtra, boolean reiniciarCompletamente){ // reiniciarCompletamente no nos importa.
         setPosicion(Constantes.POS_JUGADOR.copiar());
         setDireccion("der");
         setFrameActual(0);

@@ -48,14 +48,14 @@ public class Controlador {
     public static Boolean huidaFantasmas = false;
     public static long finHuidaFantasmas = 0;
 
-    public static ArrayList<Integer> vidasDadas = new ArrayList<>();
+    public static int puntuacionUltimaVidaDada = 0;
 
     public static String esperaRazon = "null";
     public static double esperaMomento = -1;
 
 
 
-    private Controlador() throws IOException, ParseException {
+    private Controlador() {
         estructuraVisualMapa = cargar_estructura().get(0);
         estructuraFuncionalMapa = cargar_estructura().get(1);
 
@@ -77,6 +77,55 @@ public class Controlador {
         listaFantasmas.put("naranja", naranja);
     }
 
+    public static Controlador getInstance() throws IOException, ParseException {
+        if(singletonControlador == null){
+            singletonControlador = new Controlador();
+        }
+        return singletonControlador;
+    }
+
+
+
+    /**
+     * Funcion que se encarga de dibujar todos los fantasmas mediante la funcion {@link Fantasma#dibujar(GraphicsContext)}, solo
+     * si se cumplen los requisitos necesarios.
+     * @param gc en el que se dibujaran los fantasmas.
+     */
+    public static void dibujarFantasmas(GraphicsContext gc){
+        if (perdido || nivelParpadeando) return; // Si hemos perdido o si el nivel se encuentra en animacion de parpadeo, no se dibujan
+        for(String fantasma: listaFantasmas.keySet()){
+            listaFantasmas.get(fantasma).dibujar(gc);
+        }
+    }
+
+    /**
+     * Funcion que ayuda a mover todos los fantasmas a la vez. Tambien, se encarga de sacar a los fantasmas del spawn
+     * cuando sea su momento.
+     */
+    public static void moverFantasmas(){
+        for(String fantasma: listaFantasmas.keySet()){
+            listaFantasmas.get(fantasma).mover();
+            listaFantasmas.get(fantasma).detectarColisionJugador(jugador);
+
+            if (listaFantasmas.get(fantasma).getEstado() == EstadosFantasma.ESPERASPAWNINICIAL)
+                if (ahora() > listaFantasmas.get(fantasma).getMomentoSpawnInicial()) { // Si es el momento en el que el fantasma le toca salir
+                    listaFantasmas.get(fantasma).cambiarEstado(EstadosFantasma.ESPERASPAWN);
+                    listaFantasmas.get(fantasma).setHaSpawneado(true);
+                }
+        }
+
+
+
+        if (huidaFantasmas && ahora() > finHuidaFantasmas){ // Modo HUIDA finalizado
+            huidaFantasmas = false;
+            controladorSonido.getHuidaFantasmas().stop();
+            for(String fantasma: listaFantasmas.keySet()){
+                if (listaFantasmas.get(fantasma).getEstado() == EstadosFantasma.HUIDA){
+                    listaFantasmas.get(fantasma).setEstado(EstadosFantasma.ATAQUE);
+                }
+            }
+        }
+    }
 
     /**
      * Funcion que se encarga de que suene el sonido de muerte mientras un fantasma este muerto y regresando al spawn.
@@ -97,84 +146,6 @@ public class Controlador {
     }
 
 
-    /**
-     * Funcion que se encarga de dibujar todos los fantasmas mediante la funcion {@link Fantasma#dibujar(GraphicsContext)}, solo
-     * si se cumplen los requisitos necesarios.
-     * @param gc en el que se dibujaran los fantasmas.
-     */
-    public static void dibujarFantasmas(GraphicsContext gc){
-        if (perdido || nivelParpadeando) return; // Si hemos perdido o si el nivel se encuentra en animacion de parpadeo, no se dibujan
-        for(String fantasma: listaFantasmas.keySet()){
-            listaFantasmas.get(fantasma).dibujar(gc);
-        }
-    }
-
-    /**
-     * Metodo que cuenta y devuelve la cantidad de frutas/potenciadores del mapa.
-     * @return la cantidad de frutas/potenciadores, en integer.
-     */
-    public static int comprobarFrutas(){
-        int contadorFrutas = 0;
-        ArrayList<String> simbolosFruta = new ArrayList<>(Arrays.asList(".", ":", "+"));
-        for(ArrayList<String> fila: estructuraFuncionalMapa)
-            for(String elemento: fila)
-                if(simbolosFruta.contains(elemento))
-                    contadorFrutas+=1;
-        return contadorFrutas;
-    }
-
-    public static void siguienteNivel(){
-        ArrayList<ArrayList<ArrayList<String>>> estructurasCargadas = cargar_estructura();
-        estructuraVisualMapa = estructurasCargadas.get(0);
-        estructuraFuncionalMapa = estructurasCargadas.get(1);
-
-        nivelActual += 1;
-        nivelFinalizado = false;
-        nivelParpadeando = false;
-        reiniciarPosiciones(2000);
-        juegoEnCurso = false;
-        juegoMomentoInicio = ahora() + 2000;
-    }
-
-
-    /**
-     * Funcion para reiniciar solamente las posiciones y variables basicas del jugador y fantasmas.
-     * @param miliSegundosExtra que se quieren añadir al tiempo de spawn de cada fantasma.
-     */
-    public static void reiniciarPosiciones(double miliSegundosExtra){
-        jugador.reiniciar(miliSegundosExtra);
-        for(String fantasma: listaFantasmas.keySet())
-            listaFantasmas.get(fantasma).reiniciar(miliSegundosExtra);
-    }
-
-
-    /**
-     * Funcion que ayuda a mover todos los fantasmas a la vez. Tambien, se encarga de sacar a los fantasmas del spawn
-     * cuando sea su momento.
-     * TODO mejorarlo
-     */
-    public static void moverFantasmas(){
-        for(String fantasma: listaFantasmas.keySet()){
-            listaFantasmas.get(fantasma).mover();
-            listaFantasmas.get(fantasma).detectarColisionJugador(jugador);
-
-            if (listaFantasmas.get(fantasma).estado == EstadosFantasma.ESPERASPAWNINICIAL)
-                if (ahora() > listaFantasmas.get(fantasma).momentoSpawnInicial) // Si es el momento en el que el fantasma le toca salir
-                    listaFantasmas.get(fantasma).cambiarEstado(EstadosFantasma.ESPERASPAWN);
-        }
-
-
-
-        if (huidaFantasmas && ahora() > finHuidaFantasmas){ // Modo HUIDA finalizado
-            huidaFantasmas = false;
-            controladorSonido.getHuidaFantasmas().stop();
-            for(String fantasma: listaFantasmas.keySet()){
-                if (listaFantasmas.get(fantasma).getEstado() == EstadosFantasma.HUIDA){
-                    listaFantasmas.get(fantasma).setEstado(EstadosFantasma.ATAQUE);
-                }
-            }
-        }
-    }
 
     /**
      * Funcion para forzar a que todos los fantasmas adopten el mismo estado. Se usara para DEBUG (teclas 1-4) y cuando el jugador
@@ -192,7 +163,7 @@ public class Controlador {
      */
     public static void establecerObjetivosFantasmas(){
         for(String fantasma: listaFantasmas.keySet()){
-            if (listaFantasmas.get(fantasma).estado == EstadosFantasma.ATAQUE){
+            if (listaFantasmas.get(fantasma).getEstado() == EstadosFantasma.ATAQUE){
                 if (fantasma.equals("azul"))
                     (listaFantasmas.get("azul")).establecerObjetivoAtaque(jugador, (Rojo)listaFantasmas.get("rojo")); // El fantasma azul es el unico que depende del antasma rojo para su propio movimiento
                 else
@@ -223,12 +194,46 @@ public class Controlador {
         controladorSonido.getHuidaFantasmas().play();
     }
 
-    public static Controlador getInstance() throws IOException, ParseException {
-        if(singletonControlador == null){
-            singletonControlador = new Controlador();
-        }
-        return singletonControlador;
+
+    /**
+     * Metodo que cuenta y devuelve la cantidad de frutas/potenciadores del mapa.
+     * @return la cantidad de frutas/potenciadores, en integer.
+     */
+    public static int comprobarFrutas(){
+        int contadorFrutas = 0;
+        ArrayList<String> simbolosFruta = new ArrayList<>(Arrays.asList(".", ":", "+"));
+        for(ArrayList<String> fila: estructuraFuncionalMapa)
+            for(String elemento: fila)
+                if(simbolosFruta.contains(elemento))
+                    contadorFrutas+=1;
+        return contadorFrutas;
     }
+
+    public static void siguienteNivel(){
+        ArrayList<ArrayList<ArrayList<String>>> estructurasCargadas = cargar_estructura();
+        estructuraVisualMapa = estructurasCargadas.get(0);
+        estructuraFuncionalMapa = estructurasCargadas.get(1);
+
+        nivelActual += 1;
+        nivelFinalizado = false;
+        nivelParpadeando = false;
+        reiniciarPosiciones(2000, true);
+        juegoEnCurso = false;
+        juegoMomentoInicio = ahora() + 2000;
+    }
+
+
+    /**
+     * Funcion para reiniciar solamente las posiciones y variables basicas del jugador y fantasmas.
+     * @param miliSegundosExtra que se quieren añadir al tiempo de spawn de cada fantasma.
+     */
+    public static void reiniciarPosiciones(double miliSegundosExtra, boolean reiniciarCompletamente){
+        jugador.reiniciar(miliSegundosExtra, reiniciarCompletamente);
+        for(String fantasma: listaFantasmas.keySet())
+            listaFantasmas.get(fantasma).reiniciar(miliSegundosExtra, reiniciarCompletamente);
+    }
+
+
 
 
     /**
@@ -238,32 +243,32 @@ public class Controlador {
      */
     static ArrayList<ArrayList<ArrayList<String>>> cargar_estructura()
     {
-        InputStream archivo_ruta = Controlador.class.getResourceAsStream("/datos/mapeado.txt");
+        InputStream contenidoArchivo = Controlador.class.getResourceAsStream("/datos/mapeado.txt");
         ArrayList<ArrayList<String>> estructuraVisual = new ArrayList<>();
         ArrayList<ArrayList<String>> estructuraFuncional = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(archivo_ruta))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(contenidoArchivo))) {
             String line;
             while ((line = br.readLine()) != null) { // Iteramos sobre cada linea del mapeado.txt
-                ArrayList<String> caracteresLinea = new ArrayList<>(Arrays.asList(line.split("(?<=.)"))); // Separamos los caracteres de la linea
-                ArrayList<String> estructuraFuncionalLinea = new ArrayList<>();
-                ArrayList<String> elementosTranspasables = new ArrayList<>(Arrays.asList("_", ".", ":", "-", "+")); // Elementos traspasables del mapa (aire, monedas, etc)
+                ArrayList<String> caracteresLinea = new ArrayList<>(Arrays.asList(line.split(""))); // Separamos los caracteres de la linea
+                ArrayList<String> estructuraFuncionalFila = new ArrayList<>();
+                ArrayList<String> elementosTraspasables = new ArrayList<>(Arrays.asList("_", ".", ":")); // Elementos traspasables del mapa (aire, monedas, etc)
 
                 for(String letra: caracteresLinea){ // Iteramos sobre cada caracter de cada linea del mapeado.txt
-                    if (!elementosTranspasables.contains(letra)) { // Si el elemento no es traspasable, entonces lo tomaremos como un obstaculo, sea cual sea (una esquina, una vertical, etc)
+                    if (!elementosTraspasables.contains(letra)) { // Si el elemento no es traspasable, entonces lo tomaremos como un obstaculo, sea cual sea (una esquina, una vertical, etc)
                         if (letra.equals("G")) // G es un obstaculo para todos, menos para los fantasmas que salen del Spawn
-                            estructuraFuncionalLinea.add("G");
+                            estructuraFuncionalFila.add("G");
                         else
-                            estructuraFuncionalLinea.add("#");
+                            estructuraFuncionalFila.add("#");
                     } else { //Si es traspasable, añadimos su valor propio (asi diferenciamos si es aire, moneda, moneda grande, etc.
-                        estructuraFuncionalLinea.add(letra);
+                        estructuraFuncionalFila.add(letra);
                     }
                 }
-                estructuraFuncional.add(estructuraFuncionalLinea); // Una vez finalizada la linea, la añadimos a la estructura funcional general.
+                estructuraFuncional.add(estructuraFuncionalFila); // Una vez finalizada la linea, la añadimos a la estructura funcional general.
                 estructuraVisual.add(caracteresLinea); // También añadimos la estructura visual
             }
         } catch (IOException e) {
-            System.err.format("[ERROR] Ha ocurrido un error al leer el mapeado (\"" + archivo_ruta + "\")");
+            System.err.format("[ERROR] Ha ocurrido un error al leer el mapeado \"/datos/mapeado.txt\")");
         }
         
         
@@ -276,16 +281,16 @@ public class Controlador {
      * @param gc en el que se dibujara el mapa.
      */
     static void dibujarMapeado(GraphicsContext gc){
-        for(int v = 0; v < estructuraVisualMapa.size(); v++){
-            for(int h = 0; h < estructuraVisualMapa.get(0).size(); h++){
-                double posX = h * Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA - 2 * Constantes.CUADRICULA_MAPA * Constantes.ESCALADO_SPRITE;
-                double posY = v * Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA;
+        for(int fila = 0; fila < estructuraVisualMapa.size(); fila++){
+            for(int columna = 0; columna < estructuraVisualMapa.get(0).size(); columna++){
+                double posX = columna * Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA - 2 * Constantes.CUADRICULA_MAPA * Constantes.ESCALADO_SPRITE;
+                double posY = fila * Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA;
 
 
                 if (parpadeoBlanco)
-                    gc.drawImage(hojaSprites_blanca.getSpriteData().get(estructuraVisualMapa.get(v).get(h)), posX, posY, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
+                    gc.drawImage(hojaSprites_blanca.getSpriteData().get(estructuraVisualMapa.get(fila).get(columna)), posX, posY, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
                 else
-                    gc.drawImage(hojaSprites.getSpriteData().get(estructuraVisualMapa.get(v).get(h)), posX, posY, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
+                    gc.drawImage(hojaSprites.getSpriteData().get(estructuraVisualMapa.get(fila).get(columna)), posX, posY, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA, Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
             }
         }
     }
@@ -342,14 +347,30 @@ public class Controlador {
     }
 
 
+
+    /**
+     * Funcion para comprobar si se le tiene que agregar una vida mas al jugador, dependiendo su puntuacion actual, la puntuacion de la ultima vida que se le agrego y el coste de la vida.
+     */
+    public static void comprobarAnyadirVida() {
+        int vidasRestantes = Controlador.jugador.getVidasRestantes();
+        if (vidasRestantes < Constantes.VIDASMAX) {
+            if (Controlador.puntuacion - Controlador.puntuacionUltimaVidaDada > Constantes.PUNTUACIONVALORVIDA) {
+                Controlador.jugador.setVidasRestantes(vidasRestantes + 1);
+                Controlador.puntuacionUltimaVidaDada = Controlador.puntuacion;
+                Controlador.controladorSonido.getVidaAnyadida().play();
+            }
+        }
+    }
+
     /**
      * Funcion que se encarga de realizar los cambios necesarios para reiniciar el juego.
      */
     public static void iniciarJuego(){
         System.out.println("INICIAR JUEGO LLAMADO");
         juegoMomentoInicio = ahora() + Constantes.COOLDOWN_INICIO_GAME;
-        reiniciarPosiciones(Constantes.COOLDOWN_INICIO_GAME);
+        reiniciarPosiciones(Constantes.COOLDOWN_INICIO_GAME, true);
     }
+
 
     /**
      * Funcion que se encarga de reiniciar TODAS las variables necesarias para jugar de nuevo, desde 0.
@@ -373,7 +394,7 @@ public class Controlador {
         siguienteParpadeo = -1;
         partidaFinalizada = false;
         partidaFinalizadaMostrado = false;
-        vidasDadas = new ArrayList<>();
+        puntuacionUltimaVidaDada = 0;
         esperaMomento = -1;
         esperaRazon = "null";
     }

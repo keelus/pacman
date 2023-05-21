@@ -4,7 +4,6 @@ import javafx.scene.media.AudioClip;
 public class ControladorSonido {
 
     private final AudioClip jugadorComer;
-    private final AudioClip jugadorComerFruta;
     private final AudioClip jugadorComerFantasma;
     private final AudioClip huidaFantasmas;
     private final AudioClip muerteJugador;
@@ -14,9 +13,6 @@ public class ControladorSonido {
 
     public AudioClip getJugadorComer() {
         return jugadorComer;
-    }
-    public AudioClip getJugadorComerFruta() {
-        return jugadorComerFruta;
     }
     public AudioClip getHuidaFantasmas() {
         return huidaFantasmas;
@@ -39,14 +35,13 @@ public class ControladorSonido {
 
 
     public ControladorSonido() {
-        jugadorComer = new AudioClip(getClass().getResource("/media/audio/comer.wav").toString());
-        jugadorComerFruta = new AudioClip(getClass().getResource("/media/audio/eat_fruit.wav").toString());
-        jugadorComerFantasma = new AudioClip(getClass().getResource("/media/audio/eat_ghost.wav").toString());
-        huidaFantasmas = new AudioClip(getClass().getResource("/media/audio/power_pellet.wav").toString());
+        jugadorComer = new AudioClip(getClass().getResource("/media/audio/comerComida.wav").toString());
+        jugadorComerFantasma = new AudioClip(getClass().getResource("/media/audio/comerFantasma.wav").toString());
+        huidaFantasmas = new AudioClip(getClass().getResource("/media/audio/huidaFantasmas.wav").toString());
         muerteJugador = new AudioClip(getClass().getResource("/media/audio/muerte.wav").toString());
-        vueltaSpawnFantasma = new AudioClip(getClass().getResource("/media/audio/retreating.wav").toString());
-        inicioJuego = new AudioClip(getClass().getResource("/media/audio/game_start.wav").toString());
-        vidaAnyadida = new AudioClip(getClass().getResource("/media/audio/extend.wav").toString());
+        vueltaSpawnFantasma = new AudioClip(getClass().getResource("/media/audio/respawnFantasma.wav").toString());
+        inicioJuego = new AudioClip(getClass().getResource("/media/audio/inicioJuego.wav").toString());
+        vidaAnyadida = new AudioClip(getClass().getResource("/media/audio/nuevaVida.wav").toString());
     }
 
 }

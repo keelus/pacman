@@ -3,23 +3,20 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
 import java.util.*;
 
 public abstract class Fantasma extends Entidad {
-    Posicion objetivo;
-    String direccionContraria;
-    EstadosFantasma estado;
-    Posicion posicionSpawnOjos;
-    String colorFantasma;
-    long huidaSiguienteFrame = -1;
-    String ultimoFrame = "null";
-    double esperaSpawnInicial = -1;
-    double momentoSpawnInicial = -1;
+    private Posicion objetivo;
+    private String direccionContraria;
+    private EstadosFantasma estado;
+    private Posicion posicionSpawnOjos;
+    private String colorFantasma;
+    private long huidaSiguienteFrame = -1;
+    private String ultimoFrame = "null";
+    private double esperaSpawnInicial = -1;
+    private double momentoSpawnInicial = -1;
+    private boolean haSpawneado = false;
 
-    /* Inicio Setters y getters */
     public Posicion getObjetivo() {
         return objetivo;
     }
@@ -41,22 +38,42 @@ public abstract class Fantasma extends Entidad {
     public String getColorFantasma() {
         return colorFantasma;
     }
-    /* Fin setters y getters */
+    public double getEsperaSpawnInicial() {
+        return esperaSpawnInicial;
+    }
+    public double getMomentoSpawnInicial() {
+        return momentoSpawnInicial;
+    }
+    public void setMomentoSpawnInicial(double momentoSpawnInicial) {
+        this.momentoSpawnInicial = momentoSpawnInicial;
+    }
+    public boolean isHaSpawneado() {
+        return haSpawneado;
+    }
+    public void setHaSpawneado(boolean haSpawneado) {
+        this.haSpawneado = haSpawneado;
+    }
 
-
-    public Fantasma(Posicion posicion, String direccion , Color colorDebug, Posicion objetivo, EstadosFantasma estado, String colorFantasma, double esperaSpawnInicial) throws IOException, ParseException {
+    public Fantasma(Posicion posicion, String direccion , Color colorDebug, Posicion objetivo, EstadosFantasma estado, String colorFantasma, double esperaSpawnInicial) {
         super(posicion, direccion, colorDebug);
         this.objetivo = objetivo;
         this.direccionContraria = direccionContrariaDe(direccion);
         this.estado = estado;
         this.posicionSpawnOjos = new Posicion(14, 17); // Ubicacion donde iran los ojos, una vez el fantasma muera
         this.colorFantasma = colorFantasma;
+        this.haSpawneado = false;
         if(!colorFantasma.equals("rojo")) {
+            this.haSpawneado = true;
             this.esperaSpawnInicial = esperaSpawnInicial;
             this.momentoSpawnInicial = Controlador.ahora() + esperaSpawnInicial * 1000 + Constantes.COOLDOWN_INICIO_GAME;
         }
     }
 
+
+    /**
+     * Funcion que se encarga de mover al fantasma. Movera una posicion sobre la coordenada X o Y, dependiendo del estado del fantasma, direccion y posicion de este.
+     * Tambien, esta funcion se encarga de sumar 1 al frame en la animacion del fantasma, pues queremos que se actualice como maximo 1 vez por movimiento.
+     */
     @Override
     public void mover() {
         String direccion;
@@ -185,7 +202,7 @@ public abstract class Fantasma extends Entidad {
 
             Posicion posInicial = posicionEnDireccion(getPosicion(), direccion);
 
-//            ## DEBUG LINEA
+//            ## DEBUG LINEA ENTRE POSICION DE DIRECCION Y OBJETIVO
 //            gc.setStroke(getColorDebug());
 //            gc.setLineWidth(2);
 //            Posicion pos1Linea = new Posicion(pos1.getX(), pos1.getY());
@@ -222,8 +239,6 @@ public abstract class Fantasma extends Entidad {
 
         setDireccion(distanciaMinimaDir);
         return distanciaMinimaDir;
-
-
     }
 
 
@@ -289,7 +304,6 @@ public abstract class Fantasma extends Entidad {
 
         spriteFinal = Utilidades.aplicarTransparencia(spriteFinal);
 
-        //gc.drawImage(getHojaSprites().getSpriteData().get("frame_1"), posX_fantasma, posY_fantasma, dim_fantasma, dim_fantasma);
         gc.drawImage(spriteFinal, posicionX, posicionY, dimensionFantasma, dimensionFantasma);
     }
 
@@ -312,7 +326,6 @@ public abstract class Fantasma extends Entidad {
         this.direccionContraria = helper;
     }
 
-    abstract void establecerObjetivoAtaque(Jugador jugador, Rojo rojo);
 
 
     /**
@@ -321,11 +334,16 @@ public abstract class Fantasma extends Entidad {
      * @param jugador de la que se usa su posicion
      */
     public void detectarColisionJugador(Jugador jugador){
-        if (getPosicion().getX() == jugador.getPosicion().getX() && getPosicion().getY() == jugador.getPosicion().getY()){
+        if (getPosicion()
+    /**
+     * Funcion que se encarga de mover al jugador. Movera una posicion sobre la coordenada X o Y, dependiendo la direccion actual del jugador.
+     * Tambien, esta funcion se encarga de sumar 1 al frame en la animacion del jugador, pues queremos que se actualice como maximo 1 vez por movimiento.
+     */.getX() == jugador.getPosicion().getX() && getPosicion().getY() == jugador.getPosicion().getY()){
             if (this.estado == EstadosFantasma.HUIDA) { // Jugador come a fantasma
                 Controlador.controladorSonido.getJugadorComerFantasma().play();
                 cambiarEstado(EstadosFantasma.MUERTO);
                 Controlador.puntuacion += Constantes.PUNTUACION_FANTASMA_BASE;
+                Controlador.comprobarAnyadirVida();
             }
             else if (this.estado != EstadosFantasma.MUERTO){ // Si el fantasma puede matar
                 if (Controlador.jugador.isConVida() && !Controlador.perdido){
@@ -337,42 +355,6 @@ public abstract class Fantasma extends Entidad {
                 }
             }
         }
-    }
-
-    /**
-     * Funcion que reinicia todos los valores del fantasma para que este como al inicio.
-     * @param miliSegundosExtra que se sumara al tiempo de spawn de los tres fantasmas que empiezan dentro (rosa, azul y naranja)
-     */
-    @Override
-    void reiniciar(double miliSegundosExtra){
-        switch(this.colorFantasma){
-            case "rojo":
-                setDireccion("izq");
-                setDireccionContraria(direccionContrariaDe("izq"));
-                setPosicion(Constantes.POS_ROJO.copiar());
-                setEstado(EstadosFantasma.ATAQUE);
-                break;
-            case "rosa":
-                setDireccion("abj");
-                setDireccionContraria(direccionContrariaDe("abj"));
-                setPosicion(Constantes.POS_ROSA.copiar());
-                setEstado(EstadosFantasma.ESPERASPAWNINICIAL);
-                break;
-            case "azul":
-                setDireccion("arr");
-                setDireccionContraria(direccionContrariaDe("arr"));
-                setPosicion(Constantes.POS_AZUL.copiar());
-                setEstado(EstadosFantasma.ESPERASPAWNINICIAL);
-                break;
-            case "naranja":
-                setDireccion("arr");
-                setDireccionContraria(direccionContrariaDe("arr"));
-                setPosicion(Constantes.POS_NARANJA.copiar());
-                setEstado(EstadosFantasma.ESPERASPAWNINICIAL);
-                break;
-        }
-        this.momentoSpawnInicial = Controlador.ahora() + this.esperaSpawnInicial * 1000 + miliSegundosExtra;
-        this.objetivo = new Posicion(-1, -1);
     }
 
 
@@ -390,4 +372,6 @@ public abstract class Fantasma extends Entidad {
             default: return null;
         }
     }
+
+    abstract void establecerObjetivoAtaque(Jugador jugador, Rojo rojo);
 }

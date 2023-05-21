@@ -1,11 +1,8 @@
 package org.hugom;
 import javafx.scene.paint.Color;
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
 
 public class Rosa extends Fantasma{
-    public Rosa(Posicion posicion, String direccion, Posicion objetivo, EstadosFantasma estado) throws IOException, ParseException {
+    public Rosa(Posicion posicion, String direccion, Posicion objetivo, EstadosFantasma estado) {
         super(posicion, direccion, Color.PINK, objetivo, estado, "rosa", 7.0);
     }
 
@@ -34,5 +31,23 @@ public class Rosa extends Fantasma{
                 break;
         }
         setObjetivo(posJugador);
+    }
+
+    @Override
+    void reiniciar(double miliSegundosExtra, boolean reiniciarCompletamente){
+        setDireccion("abj");
+        setDireccionContraria(direccionContrariaDe("abj"));
+        setPosicion(Constantes.POS_ROSA.copiar());
+        setEstado(EstadosFantasma.ESPERASPAWNINICIAL);
+
+        this.setMomentoSpawnInicial(Controlador.ahora() + 1000 + miliSegundosExtra); // Añadimos un segundo unicamente a la espera, en vez de su espera original.
+        this.setObjetivo(new Posicion(-1, -1));
+
+        if (reiniciarCompletamente || !this.isHaSpawneado()) {
+            this.setMomentoSpawnInicial(Controlador.ahora() + this.getEsperaSpawnInicial() * 1000 + miliSegundosExtra);
+
+            if (reiniciarCompletamente)
+                this.setHaSpawneado(false);
+        }
     }
 }

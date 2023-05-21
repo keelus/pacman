@@ -1,6 +1,7 @@
 package org.hugom;
 
 public class Constantes {
+    final static boolean MODODEBUG = false;
 
     // MAPEADO
     final static int FILAS = 28 + 4 - 4;
@@ -29,7 +30,7 @@ public class Constantes {
     final static int COOLDOWN_INICIO_GAME = 4000;
 
     // JUGADOR
-    final static int VIDAPORPUNTUACION = 5000;
+    final static int PUNTUACIONVALORVIDA = 3000;
     final static int VIDASMAX = 5;
     final static int VIDAS_INICIALES = 3;
 

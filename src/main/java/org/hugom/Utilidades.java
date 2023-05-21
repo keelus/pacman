@@ -6,15 +6,16 @@ import javafx.scene.image.WritableImage;
 public class Utilidades {
 
     public static WritableImage aplicarTransparencia(WritableImage imagen) {
-        PixelReader pixelReader = imagen.getPixelReader();
-        WritableImage imagenTransparente = new WritableImage(pixelReader, (int) imagen.getWidth(), (int) imagen.getHeight());
-        PixelWriter pixelWriter = imagenTransparente.getPixelWriter();
+        PixelReader lectorPixelesImagen = imagen.getPixelReader();
+        WritableImage imagenTransparente = new WritableImage(lectorPixelesImagen, (int) imagen.getWidth(), (int) imagen.getHeight());
+        PixelWriter escritorPixelesImagen = imagenTransparente.getPixelWriter();
         for (int y = 0; y < imagenTransparente.getHeight(); y++) {
             for (int x = 0; x < imagenTransparente.getWidth(); x++) {
-                if (pixelReader.getArgb(x, y) == 0xFF_000000) {
-                    pixelWriter.setArgb(x, y, 0);
+                // Si el color es negro (o sea, #000000 en hex), queremos establecer el pixel transparente.
+                if (lectorPixelesImagen.getArgb(x, y) == 0xFF_000000) {
+                    escritorPixelesImagen.setArgb(x, y, 0);
                 } else {
-                    pixelWriter.setArgb(x, y, pixelReader.getArgb(x, y));
+                    escritorPixelesImagen.setArgb(x, y, lectorPixelesImagen.getArgb(x, y));
                 }
             }
         }

@@ -1,12 +1,10 @@
 package org.hugom;
 
 import javafx.scene.paint.Color;
-import org.json.simple.parser.ParseException;
-import java.io.IOException;
 
 
 public class Azul extends Fantasma{
-    public Azul(Posicion posicion, String direccion , Posicion objetivo, EstadosFantasma estado) throws IOException, ParseException {
+    public Azul(Posicion posicion, String direccion , Posicion objetivo, EstadosFantasma estado) {
         super(posicion, direccion, Color.CYAN, objetivo, estado, "azul", 14.0);
     }
 
@@ -37,5 +35,24 @@ public class Azul extends Fantasma{
         }
         Posicion posicionFinal = Posicion.rotar180Grados(posJugador, posRojo);
         setObjetivo(posicionFinal);
+    }
+
+    @Override
+    void reiniciar(double miliSegundosExtra, boolean reiniciarCompletamente){
+        setDireccion("arr");
+        setDireccionContraria(direccionContrariaDe("arr"));
+        setPosicion(Constantes.POS_AZUL.copiar());
+        setEstado(EstadosFantasma.ESPERASPAWNINICIAL);
+
+        this.setMomentoSpawnInicial(Controlador.ahora() + 3000 + miliSegundosExtra); // Añadimos tres segundos unicamente a la espera, en vez de su espera original.
+        this.setObjetivo(new Posicion(-1, -1));
+
+        if (reiniciarCompletamente || !this.isHaSpawneado()) {
+            this.setMomentoSpawnInicial(Controlador.ahora() + this.getEsperaSpawnInicial() * 1000 + miliSegundosExtra);
+
+            if (reiniciarCompletamente)
+                this.setHaSpawneado(false);
+        }
+
     }
 }

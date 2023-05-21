@@ -26,8 +26,9 @@ public class Main extends Application {
     ImageView logo = new ImageView(logoSource);
 
 
-
-    public Main()  {}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) throws IOException, ParseException {
@@ -128,24 +129,27 @@ public class Main extends Application {
 
 
             // TECLAS DEBUG
-            if (event.getCode() == KeyCode.O) Controlador.nivelActual++;
-            else if (event.getCode() == KeyCode.K)Controlador.nivelActual--;
+            if (Constantes.MODODEBUG){
+                if (event.getCode() == KeyCode.O) Controlador.nivelActual++;
+                else if (event.getCode() == KeyCode.K) Controlador.nivelActual--;
 
-            else if (event.getCode() == KeyCode.DIGIT1) Controlador.forzarHuidaFantasmas();
-            else if (event.getCode() == KeyCode.DIGIT2) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ATAQUE);
-            else if (event.getCode() == KeyCode.DIGIT3) Controlador.actualizarEstadosFantasmas(EstadosFantasma.MUERTO);
-            else if (event.getCode() == KeyCode.DIGIT4) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ESPERASPAWN);
+                else if (event.getCode() == KeyCode.DIGIT1) Controlador.forzarHuidaFantasmas();
+                else if (event.getCode() == KeyCode.DIGIT2) Controlador.actualizarEstadosFantasmas(EstadosFantasma.ATAQUE);
+                else if (event.getCode() == KeyCode.DIGIT3) Controlador.actualizarEstadosFantasmas(EstadosFantasma.MUERTO);
+                else if (event.getCode() == KeyCode.DIGIT4)
+                    Controlador.actualizarEstadosFantasmas(EstadosFantasma.ESPERASPAWN);
 
-            else if (event.getCode() == KeyCode.DIGIT8) {
-                int frame = Controlador.jugador.getFrameActual() - 1;
-                if(Controlador.jugador.getFrameActual() == 0)
-                    frame = 13;
-                Controlador.jugador.setFrameActual(frame);
-            } else if (event.getCode() == KeyCode.DIGIT9){
-                int frame = Controlador.jugador.getFrameActual() + 1;
-                if(Controlador.jugador.getFrameActual() == 13)
-                    frame = 0;
-                Controlador.jugador.setFrameActual(frame);
+                else if (event.getCode() == KeyCode.DIGIT8) {
+                    int frame = Controlador.jugador.getFrameActual() - 1;
+                    if (Controlador.jugador.getFrameActual() == 0)
+                        frame = 13;
+                    Controlador.jugador.setFrameActual(frame);
+                } else if (event.getCode() == KeyCode.DIGIT9) {
+                    int frame = Controlador.jugador.getFrameActual() + 1;
+                    if (Controlador.jugador.getFrameActual() == 13)
+                        frame = 0;
+                    Controlador.jugador.setFrameActual(frame);
+                }
             }
         });
 
@@ -213,7 +217,7 @@ public class Main extends Application {
                             Controlador.controladorSonido.getVueltaSpawnFantasma().stop();
                             Controlador.jugador.setConVida(true);
                             Controlador.perdido = false;
-                            Controlador.reiniciarPosiciones(0);
+                            Controlador.reiniciarPosiciones(0, false);
                             Controlador.restadoPerdido = false;
                             Controlador.jugador.setVidasRestantes(Controlador.jugador.getVidasRestantes() - 1); // Restamos 1 vida
                         }
@@ -286,7 +290,4 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }
