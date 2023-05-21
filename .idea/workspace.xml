@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Arreglos y mejoras varias.">
+    <list default="true" id="c5e9ed41-9237-42f2-a1e2-6775b6f0a7ae" name="Changes" comment="Version final.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/hugom/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +70,7 @@
       <workItem from="1683573960881" duration="2744000" />
       <workItem from="1683646792266" duration="3960000" />
       <workItem from="1684661666518" duration="5790000" />
-      <workItem from="1684661192509" duration="191000" />
+      <workItem from="1684661192509" duration="310000" />
     </task>
     <task id="LOCAL-00001" summary="Arreglado el error de path al cargar imagenes de Sprite">
       <created>1682356082981</created>
@@ -143,7 +142,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683650739530</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Version final.">
+      <created>1684661422052</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1684661422052</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -156,17 +162,7 @@
     <MESSAGE value="Reinicio de juego completado." />
     <MESSAGE value="Reorganizado codigo vario." />
     <MESSAGE value="Arreglos y mejoras varias." />
-    <option name="LAST_COMMIT_MESSAGE" value="Arreglos y mejoras varias." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/hugom/Main.java</url>
-          <line>154</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Version final." />
+    <option name="LAST_COMMIT_MESSAGE" value="Version final." />
   </component>
 </project>
