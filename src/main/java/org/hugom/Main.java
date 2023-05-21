@@ -18,12 +18,9 @@ import javafx.scene.image.ImageView ;
 
 
 public class Main extends Application {
-
-
-
     Image logoSource = new Image(getClass().getResourceAsStream("/media/imagen/logo.png"));
-
     ImageView logo = new ImageView(logoSource);
+    Image iconoApp = new Image(getClass().getResourceAsStream("/media/imagen/icono.png"));
 
 
     public static void main(String[] args) {
@@ -31,9 +28,10 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException, ParseException {
-        primaryStage.setTitle("Pacman - por Hugo Moreda");
-        primaryStage.setResizable(false);
+    public void start(Stage ventana) throws IOException, ParseException {
+        ventana.setTitle("Pacman - por Hugo Moreda");
+        ventana.getIcons().add(iconoApp);
+        ventana.setResizable(false);
 
         Font fuente = Font.loadFont(getClass().getResourceAsStream("/media/tipografia/fuente.ttf"), Constantes.ESCALADO_SPRITE * Constantes.CUADRICULA_MAPA);
 
@@ -286,8 +284,8 @@ public class Main extends Application {
         };
 
         timer.start();
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        ventana.setScene(scene);
+        ventana.show();
     }
 
 }
