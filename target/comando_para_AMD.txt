@@ -1,0 +1,1 @@
+java -Dprism.order=sw -jar Pacman-1.0.jar
